@@ -9,9 +9,9 @@ import UIKit
 
 extension UITabBarAppearance {
     
-    static func setupTabBarAppearance(for tabBar: UITabBar, backgroundColor: UIColor = UIColor(red: 0/255, green: 76/255, blue: 153/255, alpha: 0.65)) {
+    static func setupTabBarAppearance(for tabBar: UITabBar, backgroundColor: UIColor = UIColor(red: 102/255, green: 198/255, blue: 255/255, alpha: 0.65)) {
         let appearance = UITabBarAppearance()
-        appearance.configureWithTransparentBackground()
+        appearance.configureWithDefaultBackground()
         appearance.backgroundColor = backgroundColor
         
         //iOS13+

@@ -165,19 +165,19 @@ class PWCityCell: UITableViewCell {
                 navBarColor = UIColor(red: 51/255, green: 153/255, blue: 255/255, alpha: 0.6)
             case "cloud":
                 iconName = "cloud"
-                imageName = "clear"
+                imageName = "clouds-bg"
             case "cloud.drizzle":
                 iconName = "cloud.drizzle"
                 imageName = "clear"
             case "cloud.moon":
                 iconName = "cloud.moon"
-                imageName = "clouds2"
+                imageName = "cloud-moon-bg"
             case "moon.stars":
                 iconName = "moon.stars"
-                imageName = "clouds2"
+                imageName = "moon-stars-bg"
             case "cloud.sun":
                 iconName = "cloud.sun"
-                imageName = "clouds2"
+                imageName = "cloud-sun-bg"
             default:
                 imageName = "clouds2"
                 

@@ -10,11 +10,11 @@ import WeatherKit
 
 class PWWeatherHeaderView: UIView {
 
-    @UsesAutoLayout var bgImage = UIImageView()
-    @UsesAutoLayout var conditionLabel = PWBodyLabel()
-    @UsesAutoLayout var weatherIcon = UIImageView()
-    @UsesAutoLayout var temperatureLabel = PWTemperatureLabel()
+    @UsesAutoLayout var conditionLabel = PWBodyLabel(textAlignment: .center)
+    @UsesAutoLayout var weatherIconImageView = UIImageView()
+    @UsesAutoLayout var temperatureLabel = PWSectionHeaderLabel(textAlignment: .center)
     @UsesAutoLayout var cityLabel = PWSectionHeaderLabel(textAlignment: .center)
+    @UsesAutoLayout var stackView = UIStackView()
     
     
     override init(frame: CGRect) {
@@ -30,87 +30,80 @@ class PWWeatherHeaderView: UIView {
     
     
     func configure() {
-        weatherIcon.contentMode = .scaleAspectFit
-        weatherIcon.tintColor = .secondaryLabel
+        weatherIconImageView.contentMode = .scaleAspectFit
+        weatherIconImageView.tintColor = .secondaryLabel
         cityLabel.font = .systemFont(ofSize: 30, weight: .bold)
-    
-        bgImage.layer.cornerRadius = 10
-        bgImage.clipsToBounds = true
+        conditionLabel.font = .systemFont(ofSize: 18, weight: .light)
         
+        temperatureLabel.font = .systemFont(ofSize: 62, weight: .regular)
+        
+        stackView.axis = .horizontal
+        stackView.distribution = .equalCentering
+        
+        backgroundColor = UIColor(red: 100/255, green: 163/255, blue: 195/255, alpha: 0.50)
+        layer.cornerRadius = 10
+        
+        cityLabel.addShadow()
+        weatherIconImageView.addShadow()
+        temperatureLabel.addShadow()
+    
         addSubviews()
     }
 
     
     func addSubviews() {
-        addSubview(bgImage)
         addSubview(cityLabel)
+        addSubview(stackView)
+        stackView.addArrangedSubview(weatherIconImageView)
+        stackView.addArrangedSubview(temperatureLabel)
         addSubview(conditionLabel)
-        addSubview(weatherIcon)
-        addSubview(temperatureLabel)
         
         NSLayoutConstraint.activate([
-            bgImage.topAnchor.constraint(equalTo: topAnchor),
-            bgImage.leadingAnchor.constraint(equalTo: leadingAnchor),
-            bgImage.trailingAnchor.constraint(equalTo: trailingAnchor),
-            bgImage.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
-            cityLabel.topAnchor.constraint(equalTo: topAnchor, constant: 30),
+            cityLabel.topAnchor.constraint(equalTo: topAnchor, constant: 20),
             cityLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
             cityLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
             cityLabel.heightAnchor.constraint(equalToConstant: 30),
             
-            conditionLabel.topAnchor.constraint(equalTo: bgImage.topAnchor, constant: 15),
-            conditionLabel.leadingAnchor.constraint(equalTo: bgImage.leadingAnchor, constant: 15),
+            weatherIconImageView.widthAnchor.constraint(equalToConstant: 80),
+            
+            temperatureLabel.widthAnchor.constraint(equalToConstant: 110),
+            
+            stackView.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 20),
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            stackView.heightAnchor.constraint(equalToConstant: 80),
+
+            conditionLabel.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 15),
+            conditionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
+            conditionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
             conditionLabel.heightAnchor.constraint(equalToConstant: 20),
-            
-            temperatureLabel.trailingAnchor.constraint(equalTo: bgImage.trailingAnchor, constant: -140),
-            temperatureLabel.centerYAnchor.constraint(equalTo: bgImage.centerYAnchor, constant: 20),
-            
-            weatherIcon.centerYAnchor.constraint(equalTo: bgImage.centerYAnchor, constant: 20),
-            weatherIcon.trailingAnchor.constraint(equalTo: temperatureLabel.leadingAnchor, constant: -10),
-            weatherIcon.heightAnchor.constraint(equalToConstant: 60),
-            weatherIcon.widthAnchor.constraint(equalToConstant: 60),
+
             
         ])
     }
     
     
-    func set(for location: LocationData, tabBar: UITabBar, navBar: UINavigationBar) {
+    func set(for location: LocationData, tabBar: UITabBar, navBar: UINavigationBar, bgView: UIView) {
         
         cityLabel.text = location.city
         
         let formatter = MeasurementFormatter()
-        formatter.unitStyle = .medium
+        formatter.unitStyle = .short
         formatter.numberFormatter.maximumFractionDigits = 0
         
         let tempString = formatter.string(from: (location.weather?.currentWeather.temperature)!)
         temperatureLabel.text = tempString
 
-        var iconName: String = ""
-        var imageName: String = ""
         var navBarColor: UIColor = .clear
-        switch location.weather?.currentWeather.symbolName {
-            case "sun.max":
-                iconName = "sun.max"
-                imageName = "clouds2"
-                navBarColor = UIColor(red: 51/255, green: 153/255, blue: 255/255, alpha: 0.6)
-            case "cloud":
-                iconName = "cloud"
-                imageName = "clouds2"
-                navBarColor = .gray
-            case "cloud.drizzle":
-                iconName = "cloud.drizzle"
-            case "cloud.moon":
-                iconName = "cloud.moon"
-            case "moon.stars":
-                iconName = "moon.stars"
-            case "cloud.sun":
-                iconName = "cloud.sun"
-            default:
-                print()
-                
-        }
-        weatherIcon.image = UIImage(named: iconName)
-        bgImage.image = UIImage(named: imageName)
+        
+        let images = UIHelper.getSFSymbolWithConfiguration(symbol: (location.weather?.currentWeather.symbolName)!)
+        weatherIconImageView.image = images.weatherImage
+        bgView.backgroundColor = UIColor(patternImage: images.backgroundImage!)
+        
+        conditionLabel.text = location.weather?.currentWeather.condition.description
+        
+        
+        
+//        UIHelper.createAxialGradient(in: self, startPoint: CGPoint(x: 0.5, y: 0), endPoint: CGPoint(x: 0.5, y: 1), colors: [UIColor.clear.cgColor, UIColor(displayP3Red: 0/255, green: 0/255, blue: 0/255, alpha: 0.06).cgColor, UIColor(displayP3Red: 0/255, green: 0/255, blue: 0/255, alpha: 0.06).cgColor, UIColor.clear.cgColor])
+        
     }
 }

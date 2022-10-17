@@ -20,6 +20,8 @@ class PWHourForecastVC: UIViewController {
         super.init(nibName: nil, bundle: nil)
         let date = Date()
         self.forecast = forecast.hourlyForecast.forecast.filter{$0.date >= date}
+
+        
     }
     
     
@@ -54,7 +56,7 @@ class PWHourForecastVC: UIViewController {
         tableView.register(PWHourForecastCell.self, forCellReuseIdentifier: PWHourForecastCell.cellid)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = UIColor(red: 32/255, green: 32/255, blue: 32/255, alpha: 0.15)
+        tableView.backgroundColor = UIColor(red: 38/255, green: 138/255, blue: 188/255, alpha: 0.35)
         tableView.layer.cornerRadius = 10
         tableView.sectionHeaderTopPadding = 0
         tableView.isScrollEnabled = false

@@ -20,7 +20,7 @@ class PWTabBarController: UITabBarController {
     
 
     func createMainNC() -> UINavigationController {
-        let mainVC = WeatherVC(location: LocationData(lat: 0, lon: 0, city: "", country: "", weather: nil))
+        let mainVC = WeatherVC(location: nil)
         mainVC.tabBarItem = UITabBarItem(title: "Weather", image: UIImage(systemName: "sun.max"), selectedImage: UIImage(systemName: "sun.max"))
         mainVC.tabBarItem.tag = 0
         return UINavigationController(rootViewController: mainVC)

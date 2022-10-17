@@ -28,6 +28,7 @@ class PWConditionView: UIView {
     
     func configure() {
         conditionIconImageView.tintColor = .label
+        conditionIconImageView.addShadow()
 
         addSubviews()
     }
@@ -47,30 +48,17 @@ class PWConditionView: UIView {
     
     
     func set(weather: HourWeather) {
-        var iconName: String!
-        switch weather.symbolName {
-            case "sun.max":
-                iconName = "sun.max"
-            case "cloud":
-                iconName = "cloud"
-            case "cloud.drizzle":
-                iconName = "cloud.drizzle"
-            case "cloud.moon":
-                iconName = "cloud.moon"
-            case "moon.stars":
-                iconName = "moon.stars"
-            case "cloud.sun":
-                iconName = "cloud.sun"
-            default:
-                iconName = ""
-                
-        }
+        let weatherImage = UIHelper.getSFSymbolWithConfiguration(symbol: weather.symbolName)
+        conditionIconImageView.image = weatherImage.weatherImage
+        
+
+        
         
         let formatter2 = MeasurementFormatter()
         formatter2.unitStyle = .short
         formatter2.numberFormatter.maximumFractionDigits = 0
         
-        conditionIconImageView.image = UIImage(named: iconName)
+        
         maxTemperatureLabel.text = formatter2.string(from: weather.temperature)
         
         minTemperatureLabel.textColor = .clear
@@ -102,14 +90,18 @@ class PWConditionView: UIView {
                 iconName = "cloud.rain"
             default:
                 print()
-                
         }
+        
+        let image = UIImage(systemName: weather.symbolName + ".fill")
+        let config = UIImage.SymbolConfiguration.preferringMulticolor()
+        conditionIconImageView.image = UIImage(systemName: weather.symbolName + ".fill", withConfiguration: config)
+        
         
         let formatter2 = MeasurementFormatter()
         formatter2.unitStyle = .short
         formatter2.numberFormatter.maximumFractionDigits = 0
         
-        conditionIconImageView.image = UIImage(named: iconName)
+        
         maxTemperatureLabel.text = formatter2.string(from: weather.highTemperature)
         minTemperatureLabel.text = formatter2.string(from: weather.lowTemperature)
         

@@ -11,6 +11,7 @@ import CoreLocation
 
 class WeatherVC: UIViewController {
     
+    @UsesAutoLayout var backgroundImageView = UIImageView()
     @UsesAutoLayout var scrollView = UIScrollView()
     @UsesAutoLayout var headerView = PWWeatherHeaderView()
     @UsesAutoLayout var segmentedControl = UISegmentedControl(items: ["Forecast", "Sun", "Moon"])
@@ -24,11 +25,17 @@ class WeatherVC: UIViewController {
     
     let locationManager = CLLocationManager()
     
-    var location = LocationData(lat: 0, lon: 0, city: "", country: "", weather: nil)
+    var location: LocationData!
     
-    init(location: LocationData) {
+    
+    init(location: LocationData?) {
         super.init(nibName: nil, bundle: nil)
         self.location = location
+    }
+    
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     
@@ -39,26 +46,21 @@ class WeatherVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(sceneDidBecomeActive), name: UIScene.didActivateNotification, object: nil)
         configureViewController()
         configureSegmentedControl()
-
-        if location.lat == 0 {
-            getLocation()
-        } else {
-            fetchWeather(for: CLLocation(latitude: location.lat, longitude: location.lon))
-        }
+        checkIfLocationIsSet()
         
+        segmentedControl.isHidden = true
     }
     
     
     func configureViewController() {
         UINavigationBarAppearance.setupNavBarAppearance(for: navigationController!.navigationBar)
-        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = ""
         
-        // TO-DO: move in other place
-        view.backgroundColor = UIColor(patternImage: UIImage(named: "clear-bg")!)
-
+        self.stackView.isHidden = true
+        self.showLoadingView(in: view)
         layoutUI()
     }
     
@@ -66,10 +68,25 @@ class WeatherVC: UIViewController {
     func configureSegmentedControl() {
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged), for: .valueChanged)
+        segmentedControl.backgroundColor = UIColor(red: 32/255, green: 32/255, blue: 32/255, alpha: 0.35)
     }
     
     
-
+    @objc func sceneDidBecomeActive() {
+        removeChildren()
+        stackView.isHidden = true
+        showLoadingView(in: view)
+        fetchWeather(for: location.coordinates)
+    }
+    
+    
+    func checkIfLocationIsSet() {
+        if location == nil {
+            getLocation()
+        } else {
+            fetchWeather(for: location.coordinates)
+        }
+    }
 
 
     @objc func segmentedControlValueChanged() {
@@ -94,7 +111,8 @@ class WeatherVC: UIViewController {
     
     
     func fetchWeather(for location: CLLocation) {
-        WeatherManager.shared.fetchWeather(for: location) { result in
+        WeatherManager.shared.fetchWeather(for: location) { [weak self] result in
+            guard let self else { return }
             switch result {
                 case .success(let weather):
                     DispatchQueue.main.async {
@@ -103,9 +121,11 @@ class WeatherVC: UIViewController {
                             
                         }
                       
-                        self.headerView.set(for: self.location, tabBar: self.tabBarController!.tabBar, navBar: self.navigationController!.navigationBar)
+                        self.headerView.set(for: self.location, tabBar: self.tabBarController!.tabBar, navBar: self.navigationController!.navigationBar, bgView: self.backgroundImageView)
                         self.add(childVC: PWHourForecastVC(forecast: (self.location.weather!)), to: self.hourForecastView)
                         self.add(childVC: PWDayForecastVC(forecast: (self.location.weather!)), to: self.dayForecastView)
+                        self.stackView.isHidden = false
+                        self.dismissLoadingView(in: self.view)
                     }
                     
                 case .failure(let error):
@@ -118,9 +138,10 @@ class WeatherVC: UIViewController {
     
     //after location request nothing happens, have to restart app to fetch data
     func getLocation() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+        
         if locationManager.authorizationStatus == .authorizedWhenInUse {
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
             locationManager.startUpdatingLocation()
         } else {
             locationManager.requestWhenInUseAuthorization()
@@ -158,10 +179,11 @@ class WeatherVC: UIViewController {
     
     
     func layoutUI() {
+        view.addSubview(backgroundImageView)
         view.addSubview(scrollView)
-        scrollView.addSubview(headerView)
-        scrollView.addSubview(segmentedControl)
         scrollView.addSubview(stackView)
+        stackView.addArrangedSubview(headerView)
+        stackView.addArrangedSubview(segmentedControl)
         stackView.addArrangedSubview(hourForecastView)
         stackView.addArrangedSubview(dayForecastView)
         stackView.addArrangedSubview(sunView)
@@ -170,29 +192,30 @@ class WeatherVC: UIViewController {
         
         hourForecastView.layer.cornerRadius = 10
         
+        backgroundImageView.contentMode = .scaleAspectFill
+        
         NSLayoutConstraint.activate([
+            backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor),
+            backgroundImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            backgroundImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            headerView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 10),
-            headerView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
-            headerView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-            headerView.heightAnchor.constraint(equalToConstant: 170),
-            headerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -20),
+            headerView.heightAnchor.constraint(equalToConstant: 210),
             
-            segmentedControl.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 20),
-            segmentedControl.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
-            segmentedControl.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
             segmentedControl.heightAnchor.constraint(equalToConstant: 40),
             
             sunView.heightAnchor.constraint(equalToConstant: 10),
 
-            stackView.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: 20),
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
             stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
             stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -20)
         ])
     }
 }
@@ -202,26 +225,30 @@ class WeatherVC: UIViewController {
 
 
 extension WeatherVC: CLLocationManagerDelegate {
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        if manager.authorizationStatus == .authorizedWhenInUse {
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         self.stopUpdatingLocation()
         
         let lat = locations[0].coordinate.latitude
         let lon = locations[0].coordinate.longitude
         
-        location.lat = lat
-        location.lon = lon
+        location = LocationData(lat: lat, lon: lon)
         
-        let location = CLLocation(latitude: lat, longitude: lon)
-        self.location.city = "Unknown city"
-        self.location.country = "Unknown city"
+        let coordinates = location.coordinates
         
-        location.fetchCityAndCountry(location: location) { city, country, error in
+        coordinates.fetchCityAndCountry(location: location.coordinates) { city, country, error in
             guard let city = city, let country = country, error == nil else { return }
             self.location.city = city
             self.location.country = country
         }
-        print(location)
-        fetchWeather(for: location)
+        fetchWeather(for: coordinates)
         
     }
 }

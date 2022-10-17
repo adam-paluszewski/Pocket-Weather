@@ -28,13 +28,23 @@ extension UIViewController {
     }
     
     
+    func removeChildren() {
+        for child in children {
+            child.willMove(toParent: nil)
+            child.view.removeFromSuperview()
+            child.removeFromParent()
+        }
+    }
+    
+    
     func showLoadingView(in view: UIView) {
+        guard loadingViews[view] == nil else { return }
         let containerView = UIView()
         view.addSubview(containerView)
         loadingViews[view] = containerView
         
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.backgroundColor = .clear
+        containerView.backgroundColor = .black
         containerView.alpha = 0
         
         NSLayoutConstraint.activate([
@@ -46,10 +56,11 @@ extension UIViewController {
         
 
         UIView.animate(withDuration: 0.25) {
-            containerView.alpha = 0.8
+            containerView.alpha = 0.3
         }
         
         let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .white
         containerView.addSubview(activityIndicator)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         

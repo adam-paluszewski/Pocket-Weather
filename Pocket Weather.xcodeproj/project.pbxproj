@@ -44,6 +44,9 @@
 		E9B6A71628F96B0900080EC9 /* PWError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B6A71528F96B0900080EC9 /* PWError.swift */; };
 		E9B6A71828F9964400080EC9 /* PWAlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B6A71728F9964400080EC9 /* PWAlertVC.swift */; };
 		E9B6A71B28F9985400080EC9 /* PWAlertButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B6A71A28F9985400080EC9 /* PWAlertButton.swift */; };
+		E9B6A71D28FD759C00080EC9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B6A71C28FD759C00080EC9 /* Constants.swift */; };
+		E9B6A71F28FD84C600080EC9 /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B6A71E28FD84C600080EC9 /* UIHelper.swift */; };
+		E9B6A72128FDB08900080EC9 /* UIViewExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B6A72028FDB08900080EC9 /* UIViewExt.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,6 +90,9 @@
 		E9B6A71528F96B0900080EC9 /* PWError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PWError.swift; sourceTree = "<group>"; };
 		E9B6A71728F9964400080EC9 /* PWAlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PWAlertVC.swift; sourceTree = "<group>"; };
 		E9B6A71A28F9985400080EC9 /* PWAlertButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PWAlertButton.swift; sourceTree = "<group>"; };
+		E9B6A71C28FD759C00080EC9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		E9B6A71E28FD84C600080EC9 /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
+		E9B6A72028FDB08900080EC9 /* UIViewExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExt.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +146,7 @@
 				E9B5167C28F6FAEB0025590F /* UITableViewExt.swift */,
 				E9B5167E28F8288C0025590F /* UITabBarAppearanceExt.swift */,
 				E9B5168028F82BDD0025590F /* UINavigationBarAppearanceExt.swift */,
+				E9B6A72028FDB08900080EC9 /* UIViewExt.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -189,6 +196,8 @@
 			children = (
 				E9B5165A28F4325D0025590F /* AutoLayoutWrapper.swift */,
 				E9B6A71528F96B0900080EC9 /* PWError.swift */,
+				E9B6A71C28FD759C00080EC9 /* Constants.swift */,
+				E9B6A71E28FD84C600080EC9 /* UIHelper.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -348,6 +357,7 @@
 				E9B5167B28F6EB8A0025590F /* PWDayForecastCell.swift in Sources */,
 				E9B5163628F02E410025590F /* WeatherVC.swift in Sources */,
 				E9B5163228F02E410025590F /* AppDelegate.swift in Sources */,
+				E9B6A72128FDB08900080EC9 /* UIViewExt.swift in Sources */,
 				E9B5167F28F8288C0025590F /* UITabBarAppearanceExt.swift in Sources */,
 				E9B5167528F6E6EC0025590F /* PWDayForecastVC.swift in Sources */,
 				E9B5165D28F443190025590F /* UIViewControllerExt.swift in Sources */,
@@ -359,6 +369,7 @@
 				E9B5163428F02E410025590F /* SceneDelegate.swift in Sources */,
 				E9B5168F28F948750025590F /* PersistenceManager.swift in Sources */,
 				E9B5168928F84FBE0025590F /* PWSearchResultCell.swift in Sources */,
+				E9B6A71F28FD84C600080EC9 /* UIHelper.swift in Sources */,
 				E9B5168128F82BDD0025590F /* UINavigationBarAppearanceExt.swift in Sources */,
 				E9B5165F28F455DA0025590F /* PWHourForecastHeaderView.swift in Sources */,
 				E9B5168D28F88AA30025590F /* LocationData.swift in Sources */,
@@ -371,6 +382,7 @@
 				E9B5167128F6C5880025590F /* PWWindView.swift in Sources */,
 				E9B5165528F302180025590F /* PWCaptionLabel.swift in Sources */,
 				E9B5166128F46ED60025590F /* PWSectionHeaderLabel.swift in Sources */,
+				E9B6A71D28FD759C00080EC9 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
