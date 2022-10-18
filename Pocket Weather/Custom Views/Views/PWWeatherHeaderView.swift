@@ -8,6 +8,7 @@
 import UIKit
 import WeatherKit
 
+
 class PWWeatherHeaderView: UIView {
 
     @UsesAutoLayout var conditionLabel = PWBodyLabel(textAlignment: .center)
@@ -40,7 +41,6 @@ class PWWeatherHeaderView: UIView {
         stackView.axis = .horizontal
         stackView.distribution = .equalCentering
         
-        backgroundColor = UIColor(red: 100/255, green: 163/255, blue: 195/255, alpha: 0.50)
         layer.cornerRadius = 10
         
         cityLabel.addShadow()
@@ -82,7 +82,7 @@ class PWWeatherHeaderView: UIView {
     }
     
     
-    func set(for location: LocationData, tabBar: UITabBar, navBar: UINavigationBar, bgView: UIView) {
+    func set(for location: LocationData) {
         
         cityLabel.text = location.city
         
@@ -93,17 +93,30 @@ class PWWeatherHeaderView: UIView {
         let tempString = formatter.string(from: (location.weather?.currentWeather.temperature)!)
         temperatureLabel.text = tempString
 
-        var navBarColor: UIColor = .clear
-        
-        let images = UIHelper.getSFSymbolWithConfiguration(symbol: (location.weather?.currentWeather.symbolName)!)
+        let images = UIHelper.getImagesAndColors(for: (location.weather?.currentWeather.symbolName)!)
         weatherIconImageView.image = images.weatherImage
-        bgView.backgroundColor = UIColor(patternImage: images.backgroundImage!)
+       
+        backgroundColor =  images.currentWeatherBackgroundColor
         
         conditionLabel.text = location.weather?.currentWeather.condition.description
+    }
+    
+    
+    func scale(offset: CGFloat) {
+        var cityLabelTransform = CGAffineTransform.identity
+        cityLabelTransform = cityLabelTransform.translatedBy(x: offset * -0.55, y: offset * 0.15) //0.65
+        cityLabelTransform = cityLabelTransform.scaledBy(x: 1 - offset * 0.003, y: 1 - offset * 0.003)
+        cityLabel.transform = cityLabelTransform
+
+        var stackViewTransform = CGAffineTransform.identity
+        stackViewTransform = stackViewTransform.translatedBy(x: offset * 0.95, y: offset * -0.8) //-0.2
+        stackViewTransform = stackViewTransform.scaledBy(x: 1 - offset * 0.007, y: 1 - offset * 0.007)
+        stackView.transform = stackViewTransform
+        
+        conditionLabel.transform = CGAffineTransform(scaleX: max(0, 1 - offset * 0.2), y: max(0, 1 - offset * 0.2))
         
         
-        
-//        UIHelper.createAxialGradient(in: self, startPoint: CGPoint(x: 0.5, y: 0), endPoint: CGPoint(x: 0.5, y: 1), colors: [UIColor.clear.cgColor, UIColor(displayP3Red: 0/255, green: 0/255, blue: 0/255, alpha: 0.06).cgColor, UIColor(displayP3Red: 0/255, green: 0/255, blue: 0/255, alpha: 0.06).cgColor, UIColor.clear.cgColor])
-        
+//        cityLabel.transform = CGAffineTransform(translationX: offset * -3, y: 0)
+//        stackView.transform  = CGAffineTransform(translationX: offset * 3, y: 0)
     }
 }

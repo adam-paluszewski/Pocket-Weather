@@ -14,14 +14,13 @@ class PWHourForecastVC: UIViewController {
     let headerView = PWHourForecastHeaderView()
     
     var forecast: [HourWeather] = []
-    
+    var weatherSymbol: String!
     
     init(forecast: Weather) {
         super.init(nibName: nil, bundle: nil)
         let date = Date()
         self.forecast = forecast.hourlyForecast.forecast.filter{$0.date >= date}
-
-        
+        self.weatherSymbol = forecast.currentWeather.symbolName
     }
     
     
@@ -46,6 +45,8 @@ class PWHourForecastVC: UIViewController {
 
     func configureViewController() {
         view.clipsToBounds = true
+        view.backgroundColor = UIHelper.getImagesAndColors(for: weatherSymbol).sectionColor
+        view.layer.cornerRadius = 10
         headerView.segmentedControl.addTarget(self, action: #selector(hoursSegmentedControlValueChanged), for: .valueChanged)
         
         layoutUI()
@@ -56,12 +57,11 @@ class PWHourForecastVC: UIViewController {
         tableView.register(PWHourForecastCell.self, forCellReuseIdentifier: PWHourForecastCell.cellid)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = UIColor(red: 38/255, green: 138/255, blue: 188/255, alpha: 0.35)
-        tableView.layer.cornerRadius = 10
+        tableView.backgroundColor = .clear
         tableView.sectionHeaderTopPadding = 0
-        tableView.isScrollEnabled = false
         tableView.rowHeight = 55
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        tableView.isUserInteractionEnabled = false
         tableView.prepareForDynamicHeight()
     }
     

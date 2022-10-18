@@ -14,12 +14,13 @@ class PWDayForecastVC: UIViewController {
     let headerView = PWDayForecastHeaderView()
     
     var forecast: [DayWeather] = []
+    var weatherSymbol: String!
     
     
     init(forecast: Weather) {
         super.init(nibName: nil, bundle: nil)
         self.forecast = forecast.dailyForecast.forecast
-
+        self.weatherSymbol = forecast.currentWeather.symbolName
     }
     
     
@@ -44,7 +45,8 @@ class PWDayForecastVC: UIViewController {
 
     func configureViewController() {
         view.clipsToBounds = true
-        headerView.segmentedControl.addTarget(self, action: #selector(daysSegmentedControlValueChanged), for: .valueChanged)
+        view.backgroundColor = UIHelper.getImagesAndColors(for: weatherSymbol).sectionColor
+        view.layer.cornerRadius = 10
         
         layoutUI()
     }
@@ -54,12 +56,11 @@ class PWDayForecastVC: UIViewController {
         tableView.register(PWDayForecastCell.self, forCellReuseIdentifier: PWDayForecastCell.cellid)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = UIColor(red: 38/255, green: 138/255, blue: 188/255, alpha: 0.35)
-        tableView.layer.cornerRadius = 10
+        tableView.backgroundColor = .clear
         tableView.sectionHeaderTopPadding = 0
-        tableView.isScrollEnabled = false
         tableView.rowHeight = 55
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        tableView.isUserInteractionEnabled = false
         tableView.prepareForDynamicHeight()
     }
     
@@ -87,7 +88,7 @@ class PWDayForecastVC: UIViewController {
 extension PWDayForecastVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        headerView.segmentedControl.selectedSegmentIndex == 0 ? 5 : 10
+        10
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

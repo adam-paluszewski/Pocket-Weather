@@ -82,12 +82,16 @@ class PWHourForecastCell: UITableViewCell {
         precipitationLabel.text = "\(precipitationChanceFormatted)%"
         
         if precipitationChanceFormatted == "0" {
-            precipitationLabel.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.2)
+            precipitationLabel.text = "-"
+            precipitationLabel.textColor = .secondaryLabel
+//            precipitationLabel.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.2)
         }
         
         cloudsView.set(weather: weather)
         windView.set(weather: weather)
         conditionView.set(weather: weather)
+        
+//        print(weather.symbolName)
     }
     
 }

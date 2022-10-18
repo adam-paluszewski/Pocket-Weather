@@ -28,6 +28,7 @@ class PWConditionView: UIView {
     
     func configure() {
         conditionIconImageView.tintColor = .label
+        conditionIconImageView.contentMode = .scaleAspectFit
         conditionIconImageView.addShadow()
 
         addSubviews()
@@ -48,11 +49,8 @@ class PWConditionView: UIView {
     
     
     func set(weather: HourWeather) {
-        let weatherImage = UIHelper.getSFSymbolWithConfiguration(symbol: weather.symbolName)
-        conditionIconImageView.image = weatherImage.weatherImage
-        
-
-        
+        let weatherImage = UIHelper.getImagesAndColors(for: weather.symbolName).weatherImage
+        conditionIconImageView.image = weatherImage
         
         let formatter2 = MeasurementFormatter()
         formatter2.unitStyle = .short
@@ -66,35 +64,13 @@ class PWConditionView: UIView {
             maxTemperatureLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             maxTemperatureLabel.leadingAnchor.constraint(equalTo: conditionIconImageView.trailingAnchor, constant: 4),
             maxTemperatureLabel.widthAnchor.constraint(equalToConstant: 30),
-
         ])
     }
     
     
     func set(weather: DayWeather) {
-        var iconName: String = ""
-        switch weather.symbolName {
-            case "sun.max":
-                iconName = "sun.max"
-            case "cloud":
-                iconName = "cloud"
-            case "cloud.drizzle":
-                iconName = "cloud.drizzle"
-            case "cloud.moon":
-                iconName = "cloud.moon"
-            case "moon.stars":
-                iconName = "moon.stars"
-            case "cloud.sun":
-                iconName = "cloud.sun"
-            case "cloud.rain":
-                iconName = "cloud.rain"
-            default:
-                print()
-        }
-        
-        let image = UIImage(systemName: weather.symbolName + ".fill")
-        let config = UIImage.SymbolConfiguration.preferringMulticolor()
-        conditionIconImageView.image = UIImage(systemName: weather.symbolName + ".fill", withConfiguration: config)
+        let weatherImage = UIHelper.getImagesAndColors(for: weather.symbolName).weatherImage
+        conditionIconImageView.image = weatherImage
         
         
         let formatter2 = MeasurementFormatter()

@@ -40,7 +40,7 @@ class PWDayForecastCell: UITableViewCell {
         stackView.axis = .horizontal
         stackView.distribution = .equalSpacing
         
-        
+        precipitationLabel.textColor = .label
         
     }
     
@@ -80,13 +80,15 @@ class PWDayForecastCell: UITableViewCell {
         precipitationLabel.text = "\(precipitationChanceFormatted)%"
         
         if precipitationChanceFormatted == "0" {
-            precipitationLabel.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.2)
-        } else {
-            precipitationLabel.textColor = .label
+            precipitationLabel.text = "-"
+            precipitationLabel.textColor = .secondaryLabel
+//            precipitationLabel.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.2)
         }
         
         windView.set(weather: weather)
         conditionView.set(weather: weather)
+        
+        print(weather.symbolName)
     }
 
 }

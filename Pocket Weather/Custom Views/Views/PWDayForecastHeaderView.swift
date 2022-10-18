@@ -16,7 +16,6 @@ class PWDayForecastHeaderView: UIView {
     @UsesAutoLayout var precipitationImageView = UIImageView()
     @UsesAutoLayout var windImageView = UIImageView()
     @UsesAutoLayout var conditionImageView = UIImageView()
-    @UsesAutoLayout var segmentedControl = UISegmentedControl(items: ["5 days", "10 days"])
     
     
     override init(frame: CGRect) {
@@ -52,7 +51,6 @@ class PWDayForecastHeaderView: UIView {
         
         hLine.backgroundColor = .lightGray
         
-        segmentedControl.selectedSegmentIndex = 0
         
         addSubviews()
     }
@@ -60,7 +58,6 @@ class PWDayForecastHeaderView: UIView {
     
     func addSubviews() {
         addSubview(stackView)
-        addSubview(segmentedControl)
         addSubview(hLine)
         addSubview(titleLabel)
         stackView.addArrangedSubview(hourImageView)
@@ -77,11 +74,6 @@ class PWDayForecastHeaderView: UIView {
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
             titleLabel.heightAnchor.constraint(equalToConstant: 30),
-            
-            segmentedControl.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            segmentedControl.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-            segmentedControl.widthAnchor.constraint(equalToConstant: 120),
-            segmentedControl.heightAnchor.constraint(equalToConstant: 30),
             
             hLine.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 6),
             hLine.leadingAnchor.constraint(equalTo: leadingAnchor),

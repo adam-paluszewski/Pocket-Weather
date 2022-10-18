@@ -42,10 +42,9 @@ class LocationsListVC: UIViewController {
 
     func configureViewController() {
         navigationItem.title = "Locations"
+        navigationController?.navigationBar.prefersLargeTitles = true
         searchResultsVC.delegate = self
-        UINavigationBarAppearance.setupNavBarAppearance(for: navigationController!.navigationBar, color: UIColor(red: 64/255, green: 64/255, blue: 64/255, alpha: 0.6))
-        UITabBarAppearance.setupTabBarAppearance(for: tabBarController!.tabBar, backgroundColor: UIColor(red: 64/255, green: 64/255, blue: 64/255, alpha: 0.9))
-        
+//        UINavigationBarAppearance.setupNavBarAppearance(for: navigationController!.navigationBar, color: UIColor(red: 64/255, green: 64/255, blue: 64/255, alpha: 0.6))
         layoutUI()
 
         
@@ -66,7 +65,6 @@ class LocationsListVC: UIViewController {
 
     
     func configureSearchController() {
-        navigationController?.navigationBar.prefersLargeTitles = true
         searchController.searchBar.placeholder = "Add more locations"
         navigationItem.searchController = searchController
         searchController.searchBar.delegate = self
@@ -137,8 +135,10 @@ extension LocationsListVC: UITableViewDataSource, UITableViewDelegate {
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let weatherVC = WeatherVC(location: locationsData[indexPath.row])
-        navigationController?.pushViewController(weatherVC, animated: true)
+        let weatherVC = WeatherVC(location: locationsData[indexPath.row], showNavButton: true)
+        weatherVC.isModalInPresentation = true
+        let navController = UINavigationController(rootViewController: weatherVC)
+        navigationController?.present(navController, animated: true)
     }
     
     

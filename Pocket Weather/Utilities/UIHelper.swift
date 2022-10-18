@@ -21,50 +21,69 @@ struct UIHelper {
     }
     
     
-    static func getSFSymbolWithConfiguration(symbol: String) -> (weatherImage: UIImage?, backgroundImage: UIImage?, sectionColor: UIColor) {
+    static func getImagesAndColors(for symbol: String) -> (weatherImage: UIImage, backgroundImage: UIImage, sectionColor: UIColor, currentWeatherBackgroundColor: UIColor) {
         var config = UIImage.SymbolConfiguration.preferringMulticolor()
         
         var iconName: String!
         var bgImageName: String!
         var sectionColor: UIColor!
+        var currentWeatherBackgroundColor: UIColor!
+        var navigationColor: UIColor!
         
         switch symbol {
             case "sun.max":
                 iconName = "sun.max.fill"
                 bgImageName = "clear-bg"
-                sectionColor = .clear
+                sectionColor = UIColor(red: 71/255, green: 139/255, blue: 174/255, alpha: 0.65)
+                currentWeatherBackgroundColor = .clear
             case "cloud.sun":
                 iconName = "cloud.sun.fill"
                 bgImageName = "cloud-sun-bg-vertical"
-                sectionColor = .clear
+                sectionColor = UIColor(red: 71/255, green: 139/255, blue: 174/255, alpha: 0.80)
+                currentWeatherBackgroundColor = .clear
             case "cloud":
                 iconName = "cloud.fill"
                 bgImageName = "clouds-bg"
-                sectionColor = .clear
+                sectionColor = UIColor(red: 84/255, green: 92/255, blue: 92/255, alpha: 0.65)
+                currentWeatherBackgroundColor = .clear
             case "cloud.drizzle":
                 iconName = "cloud.drizzle.fill"
                 bgImageName = "cloud-drizzle-bg"
-                sectionColor = .clear
+                sectionColor = UIColor(red: 38/255, green: 138/255, blue: 188/255, alpha: 0.35)
+                currentWeatherBackgroundColor = .clear
+            case "cloud.rain":
+                iconName = "cloud.rain.fill"
+                bgImageName = "cloud-drizzle-bg"
+                sectionColor = UIColor(red: 38/255, green: 138/255, blue: 188/255, alpha: 0.35)
+                currentWeatherBackgroundColor = .clear
             case "cloud.moon":
                 iconName = "cloud.moon.fill"
                 bgImageName = "cloud-moon-bg-vertical"
-                sectionColor = .clear
+                sectionColor = UIColor(red: 38/255, green: 138/255, blue: 188/255, alpha: 0.35)
+                currentWeatherBackgroundColor = .clear
+                config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.label, .systemYellow, .tertiaryLabel]))
+            case "cloud.moon.rain":
+                iconName = "cloud.moon.rain.fill"
+                bgImageName = "cloud-moon-bg-vertical"
+                sectionColor = UIColor(red: 38/255, green: 138/255, blue: 188/255, alpha: 0.35)
+                currentWeatherBackgroundColor = .clear
                 config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.label, .systemYellow, .tertiaryLabel]))
             case "moon.stars":
                 iconName = "moon.stars.fill"
                 bgImageName = "moon-stars-bg"
-                sectionColor = .clear
-                sectionColor = Constants.SectionColors.moonStars
+                sectionColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.65)
+                currentWeatherBackgroundColor = .clear
                 config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.systemYellow, .secondaryLabel]))
             default:
-                iconName = ""
+                iconName = "heart"
                 bgImageName = "moon-stars-bg"
                 sectionColor = .clear
+                currentWeatherBackgroundColor = .clear
         }
-        let weatherImage = UIImage(systemName: iconName, withConfiguration: config)
-        let backgroundImage = UIImage(named: bgImageName)
+        let weatherImage = UIImage(systemName: iconName, withConfiguration: config)!
+        let backgroundImage = UIImage(named: bgImageName)!
         
-        return (weatherImage: weatherImage, backgroundImage: backgroundImage, sectionColor: sectionColor)
+        return (weatherImage: weatherImage, backgroundImage: backgroundImage, sectionColor: sectionColor, currentWeatherBackgroundColor: currentWeatherBackgroundColor)
     }
     
     
