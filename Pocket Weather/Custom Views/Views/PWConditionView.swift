@@ -14,6 +14,8 @@ class PWConditionView: UIView {
     @UsesAutoLayout var maxTemperatureLabel = PWBodyLabel(textAlignment: .center)
     @UsesAutoLayout var minTemperatureLabel = PWCaptionLabel(textAlignment: .center)
     
+    var weatherAssets: WeatherAssets!
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -49,7 +51,9 @@ class PWConditionView: UIView {
     
     
     func set(weather: HourWeather) {
-        let weatherImage = UIHelper.getImagesAndColors(for: weather.symbolName).weatherImage
+        weatherAssets = WeatherAssets(symbol: weather.symbolName, condition: weather.condition.description)
+        
+        let weatherImage = weatherAssets.weatherConditionSymbol
         conditionIconImageView.image = weatherImage
         
         let formatter2 = MeasurementFormatter()
@@ -69,7 +73,9 @@ class PWConditionView: UIView {
     
     
     func set(weather: DayWeather) {
-        let weatherImage = UIHelper.getImagesAndColors(for: weather.symbolName).weatherImage
+        weatherAssets = WeatherAssets(symbol: weather.symbolName, condition: weather.condition.description)
+        
+        let weatherImage = weatherAssets.weatherConditionSymbol
         conditionIconImageView.image = weatherImage
         
         

@@ -9,7 +9,11 @@ import UIKit
 import WeatherKit
 import CoreLocation
 
+
 class WeatherVC: UIViewController {
+    
+    var hourlyForecastVC = PWHourForecastVC()
+    var dailyForecastVC = PWDayForecastVC()
     
     @UsesAutoLayout var scrollView = UIScrollView()
     @UsesAutoLayout var headerView = PWWeatherHeaderView()
@@ -17,13 +21,15 @@ class WeatherVC: UIViewController {
     @UsesAutoLayout var hourForecastView = UIView()
     @UsesAutoLayout var dayForecastView = UIView()
     
-    var headerViewHeightAnchor = NSLayoutConstraint()
     var hourForecastViewHeightConstraint = NSLayoutConstraint()
     var dayForecastViewHeightConstraint = NSLayoutConstraint()
     
     let locationManager = CLLocationManager()
+    let videoBackgroundManager = VideoBackgroundManager()
     
     var location: LocationData!
+    var weatherAssets: WeatherAssets!
+    
     
     
     init(location: LocationData?, showNavButton: Bool = false) {
@@ -34,6 +40,7 @@ class WeatherVC: UIViewController {
             let rightButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneButtonTapped))
             navigationItem.rightBarButtonItem = rightButton
         }
+        print("symbol \(location?.weather?.currentWeather.symbolName) and condition: \(location?.weather?.currentWeather.condition.description)")
     }
     
     
@@ -49,24 +56,31 @@ class WeatherVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        NotificationCenter.default.addObserver(self, selector: #selector(sceneDidBecomeActive), name: UIScene.didActivateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(sceneDidBecomeActive), name: UIScene.didActivateNotification, object: nil)
         configureViewController()
+        addChildrenViewControllers()
         checkIfLocationIsSet()
+        
+
+            
+
     }
     
     
     func configureViewController() {
-//        self.showLoadingView(in: view)
-//        UINavigationBarAppearance.setupNavBarAppearance(for: navigationController!.navigationBar, color: .systemCyan)
+//        view.layer.addSublayer(videoBackgroundManager.returnPlayerLayer(in: view, with: "video"))
         scrollView.delegate = self
-        
         layoutUI()
     }
     
     
+    func addChildrenViewControllers() {
+        add(childVC: hourlyForecastVC, to: self.hourForecastView)
+        add(childVC: dailyForecastVC, to: self.dayForecastView)
+    }
+    
+    
     @objc func sceneDidBecomeActive() {
-        removeChildren()
-        showLoadingView(in: view)
         if let location {
             fetchWeather(for: location.coordinates)
         }
@@ -92,19 +106,23 @@ class WeatherVC: UIViewController {
             guard let self else { return }
             switch result {
                 case .success(let weather):
+                    self.location.weather = weather
+                    print(self.location.weather?.currentWeather.condition)
+                    self.weatherAssets = WeatherAssets(symbol: weather.currentWeather.symbolName, condition: weather.currentWeather.condition.description)
+                    
                     DispatchQueue.main.async {
-                        self.location.weather = weather
-                        PersistenceManager.shared.updateWith(location: self.location, actionType: .add) { error in
-                            
-                        }
-                      
+            // TO-DO: passing weather as notification
                         self.headerView.set(for: self.location)
-                        self.add(childVC: PWHourForecastVC(forecast: (self.location.weather!)), to: self.hourForecastView)
-                        self.add(childVC: PWDayForecastVC(forecast: (self.location.weather!)), to: self.dayForecastView)
-//                        self.dismissLoadingView(in: self.view)
+                        self.hourlyForecastVC.view.backgroundColor = self.weatherAssets.sectionColor
+                        self.hourlyForecastVC.forecast = (self.location.weather?.hourlyForecast.forecast)!
+                        self.dailyForecastVC.view.backgroundColor = self.weatherAssets.sectionColor
+                        self.dailyForecastVC.forecast = (self.location.weather?.dailyForecast.forecast)!
+
+                        self.view.layer.addSublayer(self.videoBackgroundManager.returnPlayerLayer(in: self.view, with: self.weatherAssets.dynamicVerticalBgName))
                         
-                        let colorsAndImages = UIHelper.getImagesAndColors(for: weather.currentWeather.symbolName)
-                        self.view.backgroundColor = UIColor(patternImage: colorsAndImages.backgroundImage)
+                        if let tabBar = self.tabBarController?.tabBar {
+                            UITabBarAppearance.setupTabBarAppearance(for: tabBar, backgroundColor: self.weatherAssets.navigationBarsColor)
+                        }
                     }
                     
                 case .failure(let error):
@@ -135,9 +153,11 @@ class WeatherVC: UIViewController {
     override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
         let newHeight = container.preferredContentSize.height
         if let _ = container as? PWHourForecastVC {
+            hourForecastViewHeightConstraint.isActive = false
             hourForecastViewHeightConstraint = hourForecastView.heightAnchor.constraint(equalToConstant: newHeight)
             hourForecastViewHeightConstraint.isActive = true
         } else if let _ = container as? PWDayForecastVC {
+            dayForecastViewHeightConstraint.isActive = false
             dayForecastViewHeightConstraint = dayForecastView.heightAnchor.constraint(equalToConstant: newHeight)
             dayForecastViewHeightConstraint.isActive = true
         }
@@ -152,22 +172,26 @@ class WeatherVC: UIViewController {
         stackView.addArrangedSubview(dayForecastView)
 
         stackView.axis = .vertical
-        stackView.spacing = 20
+        stackView.spacing = 10
         
         hourForecastView.layer.cornerRadius = 10
         
-        headerViewHeightAnchor = headerView.heightAnchor.constraint(equalToConstant: 210)
-        headerViewHeightAnchor.isActive = true
+        
+        hourForecastViewHeightConstraint = hourForecastView.heightAnchor.constraint(equalToConstant: 660)
+        dayForecastViewHeightConstraint = hourForecastView.heightAnchor.constraint(equalToConstant: 635)
         
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-//            headerView.heightAnchor.constraint(equalToConstant: 210),
+            headerView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
+            
+            hourForecastViewHeightConstraint,
+            
 
-            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 15),
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
             stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
             stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
@@ -212,43 +236,16 @@ extension WeatherVC: CLLocationManagerDelegate {
 
 extension WeatherVC: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        let window = UIApplication.shared.windows.first
-        let topPadding = window?.safeAreaInsets.top ?? 0
-        let navBarHeight = navigationController?.navigationBar.frame.height ?? 0
-        
-        var offset: CGFloat = 0
-        
-        if self.isModalInPresentation {
-            offset = scrollView.contentOffset.y + navBarHeight
-        } else {
-            offset = scrollView.contentOffset.y + topPadding
-        }
+        let offset = scrollView.contentOffset.y
 
+        headerView.animate(offset: offset)
         
-        headerViewHeightAnchor.isActive = false
-        headerViewHeightAnchor = headerView.heightAnchor.constraint(equalToConstant: max(0, 210 - offset * 1.4))
-        headerViewHeightAnchor.isActive = true
-        
-        headerView.scale(offset: offset)
-        
-        
-        
-        if offset > 80 {
-            navigationController?.setNavigationBarHidden(false, animated: true)
-            navigationItem.title = nil
+        if offset > (view.safeAreaLayoutGuide.layoutFrame.height / 2) {
             navigationItem.titleView = PWNavBarTitleView(location: location)
-            UINavigationBarAppearance.setupNavBarAppearance(for: navigationController!.navigationBar, color: .clear)
+            UINavigationBarAppearance.setupNavBarAppearance(for: navigationController!.navigationBar, color: weatherAssets.navigationBarsColor)
         } else {
-            navigationItem.title = " "
             navigationItem.titleView = nil
-            UINavigationBarAppearance.setupNavBarAppearance(for: navigationController!.navigationBar, color: .clear, transparentBackground: true)
-            if !self.isModalInPresentation {
-                navigationController?.setNavigationBarHidden(true, animated: true)
-            }
-           
+            UINavigationBarAppearance.setupNavBarAppearance(for: navigationController!.navigationBar, color: .clear)
         }
-        
-        
     }
 }

@@ -58,12 +58,18 @@ class PWCloudsView: UIView {
         
         cloudCoverBar.progress = Float(weather.cloudCover)
         
-        let colors = [UIColor(red: 0/255, green: 128/255, blue: 255/255, alpha: 1),
-                      UIColor(red: 153/255, green: 204/255, blue: 255/255, alpha: 1),
-                      UIColor(red: 204/255, green: 229/255, blue: 255/255, alpha: 1),
-                      UIColor(red: 192/255, green: 192/255, blue: 192/255, alpha: 1),
-                      UIColor(red: 160/255, green: 160/255, blue: 160/255, alpha: 1)]
+        let colors = [UIColor(red: 220/255, green: 236/255, blue: 255/255, alpha: 1),
+                      UIColor(red: 206/255, green: 221/255, blue: 246/255, alpha: 1),
+                      UIColor(red: 196/255, green: 205/255, blue: 229/255, alpha: 1),
+                      UIColor(red: 166/255, green: 172/255, blue: 184/255, alpha: 1),
+                      UIColor(red: 135/255, green: 142/255, blue: 152/255, alpha: 1)]
         
+//        let colors = [UIColor(red: 106/255, green: 173/255, blue: 239/255, alpha: 1),
+//                      UIColor(red: 153/255, green: 204/255, blue: 255/255, alpha: 1),
+//                      UIColor(red: 204/255, green: 229/255, blue: 255/255, alpha: 1),
+//                      UIColor(red: 192/255, green: 192/255, blue: 192/255, alpha: 1),
+//                      UIColor(red: 160/255, green: 160/255, blue: 160/255, alpha: 1)]
+//
         switch cloudCoverBar.progress*100 {
             case 0..<20:
                 cloudCoverBar.progressTintColor = colors[0]

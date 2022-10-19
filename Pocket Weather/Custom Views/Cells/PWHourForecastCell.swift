@@ -41,8 +41,6 @@ class PWHourForecastCell: UITableViewCell {
         stackView.axis = .horizontal
         stackView.distribution = .equalSpacing
         
-        
-        precipitationLabel.textColor = .label
     }
     
     
@@ -85,6 +83,8 @@ class PWHourForecastCell: UITableViewCell {
             precipitationLabel.text = "-"
             precipitationLabel.textColor = .secondaryLabel
 //            precipitationLabel.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.2)
+        } else {
+            precipitationLabel.textColor = .label
         }
         
         cloudsView.set(weather: weather)

@@ -14,6 +14,7 @@ class PWNavBarTitleView: UIView {
     @UsesAutoLayout var temperatureLabel = PWBodyLabel(textAlignment: .center)
     @UsesAutoLayout var cityLabel = PWBodyLabel(textAlignment: .center)
     
+    var weatherAssets: WeatherAssets!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,7 +24,9 @@ class PWNavBarTitleView: UIView {
     
     init(location: LocationData) {
         super.init(frame: .zero)
-        conditionIconImageView.image = UIHelper.getImagesAndColors(for: (location.weather?.currentWeather.symbolName)!).weatherImage
+        
+        weatherAssets = WeatherAssets(symbol: location.weather?.currentWeather.symbolName, condition: location.weather?.currentWeather.condition.description)
+        conditionIconImageView.image = weatherAssets.weatherConditionSymbol
         conditionIconImageView.contentMode = .scaleAspectFit
         
         let formatter = MeasurementFormatter()

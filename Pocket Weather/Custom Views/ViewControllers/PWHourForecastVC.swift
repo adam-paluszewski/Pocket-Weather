@@ -13,21 +13,29 @@ class PWHourForecastVC: UIViewController {
     @UsesAutoLayout var tableView = UITableView()
     let headerView = PWHourForecastHeaderView()
     
-    var forecast: [HourWeather] = []
-    var weatherSymbol: String!
-    
-    init(forecast: Weather) {
-        super.init(nibName: nil, bundle: nil)
-        let date = Date()
-        self.forecast = forecast.hourlyForecast.forecast.filter{$0.date >= date}
-        self.weatherSymbol = forecast.currentWeather.symbolName
+    var forecast: [HourWeather] = [] {
+        didSet {
+            let date = Date()
+            self.forecast = forecast.filter{$0.date >= date}
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.preferredContentSize.height = self.tableView.contentSize.height
+            }
+        }
     }
-    
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+
+//    init(forecast: Weather) {
+//        super.init(nibName: nil, bundle: nil)
+//        let date = Date()
+//        self.forecast = forecast.hourlyForecast.forecast.filter{$0.date >= date}
+//        self.weatherSymbol = forecast.currentWeather.symbolName
+//    }
+//
+//
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+//
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,17 +43,12 @@ class PWHourForecastVC: UIViewController {
         configureTableView()
         
     }
-    
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        preferredContentSize.height = tableView.contentSize.height
-    }
-    
+
 
     func configureViewController() {
         view.clipsToBounds = true
-        view.backgroundColor = UIHelper.getImagesAndColors(for: weatherSymbol).sectionColor
+//        view.backgroundColor = UIColor(red: 71/255, green: 139/255, blue: 174/255, alpha: 0.65)
+//        view.backgroundColor = UIHelper.getImagesAndColors(for: weatherSymbol).sectionColor
         view.layer.cornerRadius = 10
         headerView.segmentedControl.addTarget(self, action: #selector(hoursSegmentedControlValueChanged), for: .valueChanged)
         
@@ -61,7 +64,7 @@ class PWHourForecastVC: UIViewController {
         tableView.sectionHeaderTopPadding = 0
         tableView.rowHeight = 55
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
-        tableView.isUserInteractionEnabled = false
+        tableView.allowsSelection = false
         tableView.prepareForDynamicHeight()
     }
     
@@ -90,7 +93,8 @@ class PWHourForecastVC: UIViewController {
 extension PWHourForecastVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        headerView.segmentedControl.selectedSegmentIndex == 0 ? 12 : 24
+        let numberOfRows = headerView.segmentedControl.selectedSegmentIndex == 0 ? 12 : 24
+        return min(numberOfRows, forecast.count)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -106,7 +110,7 @@ extension PWHourForecastVC: UITableViewDataSource, UITableViewDelegate {
 
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return headerView
+        return !forecast.isEmpty ?  headerView : nil
     }
 
 }

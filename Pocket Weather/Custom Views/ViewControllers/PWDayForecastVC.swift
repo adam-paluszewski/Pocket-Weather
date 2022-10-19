@@ -13,22 +13,28 @@ class PWDayForecastVC: UIViewController {
     @UsesAutoLayout var tableView = UITableView()
     let headerView = PWDayForecastHeaderView()
     
-    var forecast: [DayWeather] = []
-    var weatherSymbol: String!
-    
-    
-    init(forecast: Weather) {
-        super.init(nibName: nil, bundle: nil)
-        self.forecast = forecast.dailyForecast.forecast
-        self.weatherSymbol = forecast.currentWeather.symbolName
+    var forecast: [DayWeather] = [] {
+        didSet {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.preferredContentSize.height = self.tableView.contentSize.height
+            }
+        }
     }
     
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    
+//    init(forecast: Weather) {
+//        super.init(nibName: nil, bundle: nil)
+//        self.forecast = forecast.dailyForecast.forecast
+//        self.weatherSymbol = forecast.currentWeather.symbolName
+//    }
+//
+//
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+//
+//
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewController()
@@ -39,13 +45,14 @@ class PWDayForecastVC: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        preferredContentSize.height = tableView.contentSize.height
+//        preferredContentSize.height = tableView.contentSize.height
     }
     
 
     func configureViewController() {
         view.clipsToBounds = true
-        view.backgroundColor = UIHelper.getImagesAndColors(for: weatherSymbol).sectionColor
+        view.backgroundColor = UIColor(red: 71/255, green: 139/255, blue: 174/255, alpha: 0.65)
+//        view.backgroundColor = UIHelper.getImagesAndColors(for: weatherSymbol).sectionColor
         view.layer.cornerRadius = 10
         
         layoutUI()
@@ -88,7 +95,7 @@ class PWDayForecastVC: UIViewController {
 extension PWDayForecastVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
+        forecast.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -104,7 +111,7 @@ extension PWDayForecastVC: UITableViewDataSource, UITableViewDelegate {
 
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return headerView
+        return !forecast.isEmpty ? headerView : nil
     }
 
 

@@ -14,8 +14,6 @@ class PWTabBarController: UITabBarController {
         viewControllers = [createMainNC(), createLocationsListNC()]
         
         let appearance = UITabBarAppearance()
-        appearance.configureWithDefaultBackground()
-        
         //iOS13+
         appearance.stackedLayoutAppearance.selected.iconColor = .label
         appearance.stackedLayoutAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.label]
