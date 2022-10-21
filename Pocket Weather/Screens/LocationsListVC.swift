@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreLocation
+import MapKit
 
 class LocationsListVC: UIViewController {
     
@@ -16,23 +17,52 @@ class LocationsListVC: UIViewController {
     let location = CLLocation()
     
     var locationsData: [LocationData] = []
+    
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.hidesSearchBarWhenScrolling = false
         configureViewController()
         configureSearchController()
         configureTableView()
+        addObservers()
+        
+        
+        let searchRequest = MKLocalSearch.Request()
+        searchRequest.naturalLanguageQuery = "Wars"
+        let search = MKLocalSearch(request: searchRequest)
+        search.start { response, error in
+            print(response)
+        }
         
         
         PersistenceManager.shared.retrieveLocations { result in
             switch result {
                 case .success(let locations):
                     self.locationsData = locations
-                    self.tableView.reloadDataOnMainThread()
+                    tableView.reloadDataOnMainThread()
+                    for locationData in locationsData.enumerated() {
+                        WeatherManager.shared.fetchWeather(for: locationData.element.coordinates) { result in
+                            switch result {
+                                case .success(let weather):
+                                    self.locationsData[locationData.offset].weather = weather
+                                    
+                                    DispatchQueue.main.async {
+                                        self.tableView.reloadRows(at: [IndexPath(row: locationData.offset, section: 0)], with: .fade)
+                                    }
+                                    
+                                case .failure(let error):
+                                    print()
+                            }
+                        }
+                    }
                     
-                    
-                    
-//                    self.tableView.reloadDataOnMainThread()
+
                 case .failure(let error):
                     print(error)
             }
@@ -42,6 +72,11 @@ class LocationsListVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        navigationItem.hidesSearchBarWhenScrolling = true
+    }
+    
+    
+    @objc func sceneDidBecomeActive() {
         for locationData in locationsData.enumerated() {
             WeatherManager.shared.fetchWeather(for: locationData.element.coordinates) { result in
                 switch result {
@@ -58,7 +93,7 @@ class LocationsListVC: UIViewController {
             }
         }
     }
-    
+      
 
     func configureViewController() {
         navigationItem.title = "Locations"
@@ -68,14 +103,18 @@ class LocationsListVC: UIViewController {
         
         let gradient = CAGradientLayer()
         gradient.frame = view.frame
-        gradient.colors = [UIColor(red: 53/255, green: 92/255, blue: 125/255, alpha: 1).cgColor,
-                           UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1).cgColor]
+        gradient.colors = [UIColor(red: 29/255, green: 75/255, blue: 110/255, alpha: 1).cgColor, UIColor(red: 78/255, green: 85/255, blue: 91/255, alpha: 1).cgColor]
         gradient.startPoint = CGPoint(x: 0, y: 0)
         gradient.endPoint = CGPoint(x: 1, y: 1)
 
         view.layer.insertSublayer(gradient, at: 0)
 
     }
+    
+    
+    
+//    UIColor(red: 53/255, green: 92/255, blue: 125/255, alpha: 1).cgColor,
+//                       UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1).cgColor
 
     
     func configureSearchController() {
@@ -96,6 +135,24 @@ class LocationsListVC: UIViewController {
         tableView.rowHeight = 145
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
+        tableView.prepareForDynamicHeight()
+    }
+    
+    
+    func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(sceneDidBecomeActive), name: UIScene.didActivateNotification, object: nil)
+        
+        let name = Notification.Name("addToSavedLocationsList")
+        NotificationCenter.default.addObserver(self, selector: #selector(fireObserver), name: name, object: nil)
+    }
+    
+    
+    @objc func fireObserver(notification: NSNotification) {
+        if let location = notification.object as? LocationData {
+            self.locationsData.append(location)
+            tableView.reloadDataOnMainThread()
+        }
+
     }
     
     
@@ -144,14 +201,14 @@ extension LocationsListVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: PWCityCell.cellId, for: indexPath) as! PWCityCell
-//        cell.set(for: locationsData[indexPath.row])
-        
+        cell.set(for: locationsData[indexPath.row])
         return cell
     }
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let weatherVC = WeatherVC(location: locationsData[indexPath.row], isInitialScreen: false)
+        tableView.deselectRow(at: indexPath, animated: true)
+        let weatherVC = WeatherVC(location: locationsData[indexPath.row], type: .otherLocation)
         weatherVC.isModalInPresentation = true
         let navController = UINavigationController(rootViewController: weatherVC)
         navigationController?.present(navController, animated: true)
@@ -195,19 +252,14 @@ extension LocationsListVC: UITableViewDataSource, UITableViewDelegate {
 
 extension LocationsListVC: SearchResultsDelegate {
     func locationWasTapped(location: LocationData) {
-        PersistenceManager.shared.updateWith(location: location, actionType: .add) { error in
-            if let error = error {
-                self.presentAlertOnMainThread(title: "Error", message: error.rawValue, buttonTitle: "OK", buttonColor: .systemRed, buttonSystemImage: UIImage(systemName: "x.circle")!)
-            } else {
-                locationsData.append(location)
-                
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    self.searchController.searchBar.text = ""
-                }
-                
-            }
+
+        DispatchQueue.main.async {
+            self.searchController.searchBar.text = ""
             
+            let weatherVC = WeatherVC(location: location, type: .searchResult)
+            weatherVC.isModalInPresentation = true
+            let navController = UINavigationController(rootViewController: weatherVC)
+            self.navigationController?.present(navController, animated: true)
         }
     }
     

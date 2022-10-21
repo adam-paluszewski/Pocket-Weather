@@ -10,6 +10,10 @@ import WeatherKit
 import CoreLocation
 
 
+enum WeatherVCType {
+    case myLocation, otherLocation, searchResult
+}
+
 class WeatherVC: UIViewController {
     
     var hourlyForecastVC = PWHourForecastVC()
@@ -30,17 +34,25 @@ class WeatherVC: UIViewController {
     var location: LocationData!
     var weatherAssets: WeatherAssets!
     
-    var isInitialScreen = false
     
-    
-    init(location: LocationData?, isInitialScreen: Bool) {
+    init(location: LocationData?, type: WeatherVCType) {
         super.init(nibName: nil, bundle: nil)
         self.location = location
         
-        if !isInitialScreen {
-            let rightButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneButtonTapped))
-            navigationItem.rightBarButtonItem = rightButton
+        switch type {
+            case .otherLocation:
+                let rightButton = UIBarButtonItem(title: "OK", style: .plain, target: self, action: #selector(barButtonTapped))
+                navigationItem.rightBarButtonItem = rightButton
+            case .searchResult:
+                let leftButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(barButtonTapped))
+                navigationItem.leftBarButtonItem = leftButton
+                let rightButton = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(barButtonTapped))
+                navigationItem.rightBarButtonItem = rightButton
+            default:
+                print()
         }
+
+
     }
     
     
@@ -94,8 +106,22 @@ class WeatherVC: UIViewController {
     }
     
     
-    @objc func doneButtonTapped() {
-        dismiss(animated: true)
+    @objc func barButtonTapped(_ sender: UIBarButtonItem) {
+        switch sender.title {
+            case "OK", "Cancel":
+                dismiss(animated: true)
+            case "Add":
+                let name = Notification.Name("addToSavedLocationsList")
+                NotificationCenter.default.post(name: name, object: location)
+                self.location.weather = nil
+                PersistenceManager.shared.updateWith(location: location, actionType: .add) { error in
+                    
+                }
+                dismiss(animated: true)
+            default:
+                print()
+        }
+
     }
     
     
@@ -229,8 +255,12 @@ extension WeatherVC: CLLocationManagerDelegate {
             guard let city = city, let country = country, error == nil else { return }
             self.location.city = city
             self.location.country = country
+            PersistenceManager.shared.updateWith(location: self.location, actionType: .addMyLocation) { error in
+                
+            }
         }
         fetchWeather(for: coordinates)
+        
         
     }
 }

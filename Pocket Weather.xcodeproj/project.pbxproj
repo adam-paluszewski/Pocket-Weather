@@ -56,11 +56,12 @@
 		E9B6A74D290052FF00080EC9 /* mostly-clear-vd.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E9B6A74C290052FF00080EC9 /* mostly-clear-vd.mp4 */; };
 		E9B6A74F290054BD00080EC9 /* cloud-moon-vd.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E9B6A74E290054BD00080EC9 /* cloud-moon-vd.mp4 */; };
 		E9B6A7512900551D00080EC9 /* cloud-moon-vd2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E9B6A7502900551D00080EC9 /* cloud-moon-vd2.mp4 */; };
-		E9B6A7532900589000080EC9 /* moon-stars-vd.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E9B6A7522900589000080EC9 /* moon-stars-vd.mp4 */; };
 		E9B6A75529014C1C00080EC9 /* rain-vd.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E9B6A75429014C1C00080EC9 /* rain-vd.mp4 */; };
 		E9B6A7572901517600080EC9 /* drizzle-vd.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E9B6A7562901517600080EC9 /* drizzle-vd.mp4 */; };
 		E9B6A759290153ED00080EC9 /* cloud-vd.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E9B6A758290153ED00080EC9 /* cloud-vd.mp4 */; };
 		E9B6A75D29015BD800080EC9 /* wind-vd.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E9B6A75C29015BD700080EC9 /* wind-vd.mp4 */; };
+		E9B6A75F2902E08E00080EC9 /* PWMiniConditionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B6A75E2902E08E00080EC9 /* PWMiniConditionView.swift */; };
+		E9B6A7612902EFF200080EC9 /* moon-stars-vd.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E9B6A7602902EFF200080EC9 /* moon-stars-vd.mp4 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -116,11 +117,12 @@
 		E9B6A74C290052FF00080EC9 /* mostly-clear-vd.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mostly-clear-vd.mp4"; sourceTree = "<group>"; };
 		E9B6A74E290054BD00080EC9 /* cloud-moon-vd.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cloud-moon-vd.mp4"; sourceTree = "<group>"; };
 		E9B6A7502900551D00080EC9 /* cloud-moon-vd2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cloud-moon-vd2.mp4"; sourceTree = "<group>"; };
-		E9B6A7522900589000080EC9 /* moon-stars-vd.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "moon-stars-vd.mp4"; sourceTree = "<group>"; };
 		E9B6A75429014C1C00080EC9 /* rain-vd.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "rain-vd.mp4"; sourceTree = "<group>"; };
 		E9B6A7562901517600080EC9 /* drizzle-vd.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "drizzle-vd.mp4"; sourceTree = "<group>"; };
 		E9B6A758290153ED00080EC9 /* cloud-vd.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cloud-vd.mp4"; sourceTree = "<group>"; };
 		E9B6A75C29015BD700080EC9 /* wind-vd.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "wind-vd.mp4"; sourceTree = "<group>"; };
+		E9B6A75E2902E08E00080EC9 /* PWMiniConditionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PWMiniConditionView.swift; sourceTree = "<group>"; };
+		E9B6A7602902EFF200080EC9 /* moon-stars-vd.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "moon-stars-vd.mp4"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -276,6 +278,7 @@
 				E9B5167228F6C76D0025590F /* PWConditionView.swift */,
 				E9B5167828F6EADB0025590F /* PWDayForecastHeaderView.swift */,
 				E9B6A72228FEC01300080EC9 /* PWNavBarTitleView.swift */,
+				E9B6A75E2902E08E00080EC9 /* PWMiniConditionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -313,11 +316,11 @@
 				E9B6A7442900446B00080EC9 /* partly-cloudy-vd.mp4 */,
 				E9B6A74C290052FF00080EC9 /* mostly-clear-vd.mp4 */,
 				E9B6A74A2900526800080EC9 /* clear-vd.mp4 */,
+				E9B6A7602902EFF200080EC9 /* moon-stars-vd.mp4 */,
 				E9B6A75C29015BD700080EC9 /* wind-vd.mp4 */,
 				E9B6A758290153ED00080EC9 /* cloud-vd.mp4 */,
 				E9B6A7562901517600080EC9 /* drizzle-vd.mp4 */,
 				E9B6A75429014C1C00080EC9 /* rain-vd.mp4 */,
-				E9B6A7522900589000080EC9 /* moon-stars-vd.mp4 */,
 				E9B6A7502900551D00080EC9 /* cloud-moon-vd2.mp4 */,
 				E9B6A74E290054BD00080EC9 /* cloud-moon-vd.mp4 */,
 				E9B6A73E2900300E00080EC9 /* mostly-cloudy-vd.mp4 */,
@@ -384,6 +387,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9B5163E28F02E430025590F /* LaunchScreen.storyboard in Resources */,
+				E9B6A7612902EFF200080EC9 /* moon-stars-vd.mp4 in Resources */,
 				E9B6A759290153ED00080EC9 /* cloud-vd.mp4 in Resources */,
 				E9B6A74D290052FF00080EC9 /* mostly-clear-vd.mp4 in Resources */,
 				E9B6A74F290054BD00080EC9 /* cloud-moon-vd.mp4 in Resources */,
@@ -391,7 +395,6 @@
 				E9B6A7452900446B00080EC9 /* partly-cloudy-vd.mp4 in Resources */,
 				E9B6A75529014C1C00080EC9 /* rain-vd.mp4 in Resources */,
 				E9B5163B28F02E430025590F /* Assets.xcassets in Resources */,
-				E9B6A7532900589000080EC9 /* moon-stars-vd.mp4 in Resources */,
 				E9B6A7572901517600080EC9 /* drizzle-vd.mp4 in Resources */,
 				E9B6A74B2900526800080EC9 /* clear-vd.mp4 in Resources */,
 				E9B6A73F2900300E00080EC9 /* mostly-cloudy-vd.mp4 in Resources */,
@@ -412,6 +415,7 @@
 				E9B5167D28F6FAEC0025590F /* UITableViewExt.swift in Sources */,
 				E9B6A71828F9964400080EC9 /* PWAlertVC.swift in Sources */,
 				E9B5167728F6E92D0025590F /* SunVC.swift in Sources */,
+				E9B6A75F2902E08E00080EC9 /* PWMiniConditionView.swift in Sources */,
 				E9B5165928F312C30025590F /* PWHourForecastVC.swift in Sources */,
 				E9B5165B28F4325D0025590F /* AutoLayoutWrapper.swift in Sources */,
 				E9B5168B28F881EC0025590F /* PWCityCell.swift in Sources */,

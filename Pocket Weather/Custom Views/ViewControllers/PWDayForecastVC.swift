@@ -39,7 +39,7 @@ class PWDayForecastVC: UIViewController {
         super.viewDidLoad()
         configureViewController()
         configureTableView()
-        
+        print(forecast.count)
     }
     
 

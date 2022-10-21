@@ -88,7 +88,7 @@ struct WeatherAssets {
             case "moon.stars":
                 symbolName = "moon.stars.fill"
                 dynamicVerticalBgName = "moon-stars-vd"
-                sectionColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.1)
+                sectionColor = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.8)
                 horizontalBgImage = UIImage(named: "moon-stars-bg")
                 config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.systemYellow, .secondaryLabel]))
                 

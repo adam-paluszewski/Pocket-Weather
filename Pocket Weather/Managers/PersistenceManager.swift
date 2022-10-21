@@ -8,7 +8,7 @@
 import Foundation
 
 enum PersistanceActionType {
-    case add, remove
+    case add, addMyLocation, remove
 }
 
 struct PersistenceManager {
@@ -52,6 +52,12 @@ struct PersistenceManager {
             switch result {
                 case .success(var locations):
                     switch actionType {
+                        case .addMyLocation:
+                            if locations.isEmpty {
+                                locations.append(location)
+                            } else {
+                                locations[0] = location
+                            }
                         case .add:
                             var filteredLocations: [String] = [] //objects have different date so they are always different, cant check 'contains'
                             for location in locations {

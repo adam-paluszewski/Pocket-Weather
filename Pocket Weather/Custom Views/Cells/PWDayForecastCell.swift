@@ -87,8 +87,6 @@ class PWDayForecastCell: UITableViewCell {
         
         windView.set(weather: weather)
         conditionView.set(weather: weather)
-        
-        print(weather.symbolName)
     }
 
 }

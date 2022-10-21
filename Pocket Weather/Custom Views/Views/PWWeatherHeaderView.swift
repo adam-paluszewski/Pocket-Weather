@@ -8,7 +8,6 @@
 import UIKit
 import WeatherKit
 
-
 class PWWeatherHeaderView: UIView {
 
     @UsesAutoLayout var conditionLabel = PWBodyLabel(textAlignment: .center)
@@ -49,10 +48,10 @@ class PWWeatherHeaderView: UIView {
         temperatureLabel.addShadow()
         fetchingWeatherLabel.addShadow()
         conditionLabel.addShadow()
-    
-        addSubviews()
         
         fetchingWeatherLabel.text = "Checking weather..."
+    
+        addSubviews()
     }
 
     
@@ -77,19 +76,16 @@ class PWWeatherHeaderView: UIView {
             cityLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
             cityLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
             cityLabel.heightAnchor.constraint(equalToConstant: 30),
-            
-            
+             
             temperatureLabel.widthAnchor.constraint(equalToConstant: 150),
-            
-            
 
             conditionLabel.topAnchor.constraint(equalTo: stackView.bottomAnchor),
             conditionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
             conditionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
             conditionLabel.heightAnchor.constraint(equalToConstant: 20),
-
-            
         ])
+        
+
     }
     
     
