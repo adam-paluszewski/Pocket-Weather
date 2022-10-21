@@ -17,7 +17,7 @@ class PWHourForecastHeaderView: UIView {
     @UsesAutoLayout var cloudCoverImageView = UIImageView()
     @UsesAutoLayout var windImageView = UIImageView()
     @UsesAutoLayout var conditionImageView = UIImageView()
-    @UsesAutoLayout var segmentedControl = UISegmentedControl(items: ["12h", "24h"])
+    @UsesAutoLayout var segmentedControl = UISegmentedControl(items: ["6h", "12h", "24h"])
     
     
     override init(frame: CGRect) {
@@ -85,10 +85,10 @@ class PWHourForecastHeaderView: UIView {
             
             segmentedControl.topAnchor.constraint(equalTo: topAnchor, constant: 10),
             segmentedControl.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-            segmentedControl.widthAnchor.constraint(equalToConstant: 120),
+            segmentedControl.widthAnchor.constraint(equalToConstant: 170),
             segmentedControl.heightAnchor.constraint(equalToConstant: 30),
             
-            hLine.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 6),
+            hLine.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
             hLine.leadingAnchor.constraint(equalTo: leadingAnchor),
             hLine.trailingAnchor.constraint(equalTo: trailingAnchor),
             hLine.heightAnchor.constraint(equalToConstant: 0.25),

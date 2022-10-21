@@ -21,13 +21,16 @@ class PWTabBarController: UITabBarController {
         appearance.stackedLayoutAppearance.normal.iconColor = .secondaryLabel
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.secondaryLabel]
         
+        appearance.configureWithTransparentBackground()
+        appearance.backgroundColor = .clear
+        
         tabBar.standardAppearance = appearance
         tabBar.scrollEdgeAppearance = appearance
     }
     
 
     func createMainNC() -> UINavigationController {
-        let mainVC = WeatherVC(location: nil)
+        let mainVC = WeatherVC(location: nil, isInitialScreen: true)
         mainVC.tabBarItem = UITabBarItem(title: "Weather", image: UIImage(systemName: "cloud.sun"), selectedImage: UIImage(systemName: "cloud.sun.fill"))
         mainVC.tabBarItem.tag = 0
         return UINavigationController(rootViewController: mainVC)

@@ -23,18 +23,38 @@ class LocationsListVC: UIViewController {
         configureSearchController()
         configureTableView()
         
-    }
-    
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        
         PersistenceManager.shared.retrieveLocations { result in
             switch result {
                 case .success(let locations):
                     self.locationsData = locations
                     self.tableView.reloadDataOnMainThread()
+                    
+                    
+                    
+//                    self.tableView.reloadDataOnMainThread()
                 case .failure(let error):
                     print(error)
+            }
+        }
+    }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        for locationData in locationsData.enumerated() {
+            WeatherManager.shared.fetchWeather(for: locationData.element.coordinates) { result in
+                switch result {
+                    case .success(let weather):
+                        self.locationsData[locationData.offset].weather = weather
+                        
+                        DispatchQueue.main.async {
+                            self.tableView.reloadRows(at: [IndexPath(row: locationData.offset, section: 0)], with: .fade)
+                        }
+                        
+                    case .failure(let error):
+                        print()
+                }
             }
         }
     }
@@ -43,8 +63,6 @@ class LocationsListVC: UIViewController {
     func configureViewController() {
         navigationItem.title = "Locations"
         navigationController?.navigationBar.prefersLargeTitles = true
-        searchResultsVC.delegate = self
-//        UINavigationBarAppearance.setupNavBarAppearance(for: navigationController!.navigationBar, color: UIColor(red: 64/255, green: 64/255, blue: 64/255, alpha: 0.6))
         layoutUI()
 
         
@@ -56,11 +74,7 @@ class LocationsListVC: UIViewController {
         gradient.endPoint = CGPoint(x: 1, y: 1)
 
         view.layer.insertSublayer(gradient, at: 0)
-        
-       
-        
-//        gradient.colors = [UIColor(red: 83/255, green: 138/255, blue: 214/255, alpha: 1).cgColor,
-//                           UIColor(red: 134/255, green: 231/255, blue: 214/255, alpha: 1).cgColor]
+
     }
 
     
@@ -70,6 +84,7 @@ class LocationsListVC: UIViewController {
         searchController.searchBar.delegate = self
         searchController.searchResultsUpdater = self
         searchController.searchBar.returnKeyType = .done
+        searchResultsVC.delegate = self
     }
     
     
@@ -80,6 +95,7 @@ class LocationsListVC: UIViewController {
         tableView.delegate = self
         tableView.rowHeight = 145
         tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
     }
     
     
@@ -87,10 +103,10 @@ class LocationsListVC: UIViewController {
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10)
         ])
     }
 }
@@ -128,14 +144,14 @@ extension LocationsListVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: PWCityCell.cellId, for: indexPath) as! PWCityCell
-        cell.set(for: locationsData[indexPath.row])
+//        cell.set(for: locationsData[indexPath.row])
         
         return cell
     }
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let weatherVC = WeatherVC(location: locationsData[indexPath.row], showNavButton: true)
+        let weatherVC = WeatherVC(location: locationsData[indexPath.row], isInitialScreen: false)
         weatherVC.isModalInPresentation = true
         let navController = UINavigationController(rootViewController: weatherVC)
         navigationController?.present(navController, animated: true)

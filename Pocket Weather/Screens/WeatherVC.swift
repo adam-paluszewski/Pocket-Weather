@@ -30,17 +30,17 @@ class WeatherVC: UIViewController {
     var location: LocationData!
     var weatherAssets: WeatherAssets!
     
+    var isInitialScreen = false
     
     
-    init(location: LocationData?, showNavButton: Bool = false) {
+    init(location: LocationData?, isInitialScreen: Bool) {
         super.init(nibName: nil, bundle: nil)
         self.location = location
         
-        if showNavButton {
+        if !isInitialScreen {
             let rightButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneButtonTapped))
             navigationItem.rightBarButtonItem = rightButton
         }
-        print("symbol \(location?.weather?.currentWeather.symbolName) and condition: \(location?.weather?.currentWeather.condition.description)")
     }
     
     
@@ -60,15 +60,13 @@ class WeatherVC: UIViewController {
         configureViewController()
         addChildrenViewControllers()
         checkIfLocationIsSet()
-        
-
-            
-
     }
     
     
     func configureViewController() {
-//        view.layer.addSublayer(videoBackgroundManager.returnPlayerLayer(in: view, with: "video"))
+//        view.backgroundColor = UIColor(patternImage: UIImage(named: "main-bg")!)
+        UIHelper.addGradientAnimation(in: view)
+        
         scrollView.delegate = self
         layoutUI()
     }
@@ -91,13 +89,33 @@ class WeatherVC: UIViewController {
         if location == nil {
             getLocation()
         } else {
-            fetchWeather(for: location.coordinates)
+            updateUI()
         }
     }
     
     
     @objc func doneButtonTapped() {
         dismiss(animated: true)
+    }
+    
+    
+    func updateUI() {
+        DispatchQueue.main.async {
+            self.weatherAssets = WeatherAssets(symbol: self.location.weather?.currentWeather.symbolName, condition: self.location.weather?.currentWeather.condition.description)
+            self.headerView.set(for: self.location)
+            UIView.animate(withDuration: 2) {
+                self.hourlyForecastVC.view.backgroundColor = self.weatherAssets.sectionColor
+                self.dailyForecastVC.view.backgroundColor = self.weatherAssets.sectionColor
+            }
+            self.hourlyForecastVC.forecast = (self.location.weather?.hourlyForecast.forecast)!
+            self.dailyForecastVC.forecast = (self.location.weather?.dailyForecast.forecast)!
+            self.videoBackgroundManager.addPlayerLayer(in: self.view, with: self.weatherAssets.dynamicVerticalBgName)
+            
+            if let tabBar = self.tabBarController?.tabBar {
+                UITabBarAppearance.setupTabBarAppearance(for: tabBar, backgroundColor: self.weatherAssets.sectionColor)
+            }
+        }
+        
     }
 
     
@@ -107,24 +125,9 @@ class WeatherVC: UIViewController {
             switch result {
                 case .success(let weather):
                     self.location.weather = weather
-                    print(self.location.weather?.currentWeather.condition)
-                    self.weatherAssets = WeatherAssets(symbol: weather.currentWeather.symbolName, condition: weather.currentWeather.condition.description)
+                    self.updateUI()
                     
-                    DispatchQueue.main.async {
-            // TO-DO: passing weather as notification
-                        self.headerView.set(for: self.location)
-                        self.hourlyForecastVC.view.backgroundColor = self.weatherAssets.sectionColor
-                        self.hourlyForecastVC.forecast = (self.location.weather?.hourlyForecast.forecast)!
-                        self.dailyForecastVC.view.backgroundColor = self.weatherAssets.sectionColor
-                        self.dailyForecastVC.forecast = (self.location.weather?.dailyForecast.forecast)!
-
-                        self.view.layer.addSublayer(self.videoBackgroundManager.returnPlayerLayer(in: self.view, with: self.weatherAssets.dynamicVerticalBgName))
-                        
-                        if let tabBar = self.tabBarController?.tabBar {
-                            UITabBarAppearance.setupTabBarAppearance(for: tabBar, backgroundColor: self.weatherAssets.navigationBarsColor)
-                        }
-                    }
-                    
+                    print("symbol \(self.location.weather!.currentWeather.symbolName) and condition: \(self.location.weather!.currentWeather.condition.description), clouds:  \(self.location.weather!.currentWeather.cloudCover.description)")
                 case .failure(let error):
                     print()
             }
@@ -174,7 +177,6 @@ class WeatherVC: UIViewController {
         stackView.axis = .vertical
         stackView.spacing = 10
         
-        hourForecastView.layer.cornerRadius = 10
         
         
         hourForecastViewHeightConstraint = hourForecastView.heightAnchor.constraint(equalToConstant: 660)
@@ -192,10 +194,10 @@ class WeatherVC: UIViewController {
             
 
             stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
-            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
-            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -20),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 15),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -15),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -15),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -30),
         ])
     }
 }
@@ -242,7 +244,7 @@ extension WeatherVC: UIScrollViewDelegate {
         
         if offset > (view.safeAreaLayoutGuide.layoutFrame.height / 2) {
             navigationItem.titleView = PWNavBarTitleView(location: location)
-            UINavigationBarAppearance.setupNavBarAppearance(for: navigationController!.navigationBar, color: weatherAssets.navigationBarsColor)
+            UINavigationBarAppearance.setupNavBarAppearance(for: navigationController!.navigationBar, color: weatherAssets.sectionColor)
         } else {
             navigationItem.titleView = nil
             UINavigationBarAppearance.setupNavBarAppearance(for: navigationController!.navigationBar, color: .clear)

@@ -11,7 +11,7 @@ import WeatherKit
 class PWCityCell: UITableViewCell {
     
     static let cellId = "PWCityCell"
-
+    
     @UsesAutoLayout var containerView = UIView()
     @UsesAutoLayout var bgImageView = UIImageView()
     @UsesAutoLayout var weatherIconImageView = UIImageView()
@@ -25,7 +25,8 @@ class PWCityCell: UITableViewCell {
     @UsesAutoLayout var precipitationImageView = UIImageView()
     @UsesAutoLayout var weatherDescLabel = PWBodyLabel(textAlignment: .left)
     
-
+    var weatherAssets: WeatherAssets?
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configure()
@@ -42,17 +43,34 @@ class PWCityCell: UITableViewCell {
         
         bgImageView.contentMode = .scaleAspectFill
         bgImageView.clipsToBounds = true
-        bgImageView.layer.cornerRadius = 10
-
+        bgImageView.layer.cornerRadius = 20
+        bgImageView.image = UIImage(named: "main-bg")
+        
+        var config = UIImage.SymbolConfiguration(paletteColors: [.secondaryLabel])
+        let weatherIconImage = UIImage(systemName: "square.fill", withConfiguration: config)
+        weatherIconImageView.image = weatherIconImage
+        
         precipitationImageView.image = UIImage(named: "umbrella")
         cloudCoverImageView.image = UIImage(named: "clouds")
         windImageView.image = UIImage(named: "wind")
         
-        containerView.layer.cornerRadius = 10
+        precipitationImageView.contentMode = .scaleAspectFit
+        cloudCoverImageView.contentMode = .scaleAspectFit
+        windImageView.contentMode = .scaleAspectFit
+        
+        containerView.layer.cornerRadius = 20
         
         temperatureLabel.font = .systemFont(ofSize: 36, weight: .medium)
         cityLabel.font = .systemFont(ofSize: 24, weight: .medium)
         weatherDescLabel.textColor = .secondaryLabel
+        
+        weatherIconImageView.contentMode = .scaleAspectFit
+        
+        precipitationLabel.text = "-"
+        cloudCoverLabel.text = "-"
+        windLabel.text = "-"
+        temperatureLabel.text = "-"
+        cityLabel.text = "Checking weather..."
         
         addSubviews()
         
@@ -63,8 +81,54 @@ class PWCityCell: UITableViewCell {
                            UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.01).cgColor]
         gradient.startPoint = CGPoint(x: 0.5, y: 1)
         gradient.endPoint = CGPoint(x: 0.5, y: 0)
-
+        
         bgImageView.layer.insertSublayer(gradient, at: 0)
+    }
+    
+    
+    func set(for location: LocationData) {
+
+        if let weather = location.weather {
+            weatherAssets = WeatherAssets(symbol: weather.currentWeather.symbolName, condition: weather.currentWeather.condition.description)
+        }
+        
+        
+        cityLabel.text = location.city
+        
+        let formatter = MeasurementFormatter()
+        formatter.unitStyle = .short
+        formatter.numberFormatter.maximumFractionDigits = 0
+        
+        if let temp = location.weather?.currentWeather.temperature {
+            let tempString = formatter.string(from: temp)
+            temperatureLabel.text = tempString
+        }
+        
+        weatherIconImageView.image = weatherAssets?.weatherConditionSymbol
+        bgImageView.image =  weatherAssets?.horizontalBgImage
+        
+        if let precipitation = location.weather?.hourlyForecast.forecast[0].precipitationChance {
+            let precipitationChance = precipitation * 100
+            let precipitationChanceFormatted = String(format: "%.0f", precipitationChance)
+            precipitationLabel.text = "\(precipitationChanceFormatted)%"
+        }
+        
+        
+        if let cloudCover = location.weather?.currentWeather.cloudCover {
+            let cloudCoverage = cloudCover * 100
+            let cloudCoverageFormatted = String(format: "%.0f", cloudCoverage)
+            cloudCoverLabel.text = "\(cloudCoverageFormatted)%"
+        }
+        
+        
+        if let windSpeed = location.weather?.currentWeather.wind.speed.value {
+            let windFormatted = String(format: "%.0f", windSpeed)
+            windLabel.text = "\(windFormatted) km/h"
+        }
+
+        
+        
+        weatherDescLabel.text = location.weather?.currentWeather.condition.description
     }
     
     
@@ -86,16 +150,16 @@ class PWCityCell: UITableViewCell {
         let imageSize: CGFloat = 20
         
         NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
-            containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5),
+            containerView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
             
             bgImageView.topAnchor.constraint(equalTo: containerView.topAnchor),
             bgImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             bgImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             bgImageView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-
+            
             
             weatherIconImageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: padding),
             weatherIconImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding),
@@ -141,66 +205,5 @@ class PWCityCell: UITableViewCell {
             weatherDescLabel.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 5),
             weatherDescLabel.leadingAnchor.constraint(equalTo: cityLabel.leadingAnchor)
         ])
-    }
-    
-    
-    func set(for location: LocationData) {
-        
-        cityLabel.text = location.city
-        
-        let formatter = MeasurementFormatter()
-        formatter.unitStyle = .short
-        formatter.numberFormatter.maximumFractionDigits = 0
-
-        let tempString = formatter.string(from: (location.weather?.currentWeather.temperature)!)
-        temperatureLabel.text = tempString
-
-        var iconName: String = ""
-        var imageName: String = ""
-        var navBarColor: UIColor = .clear
-        switch location.weather?.currentWeather.symbolName {
-            case "sun.max":
-                iconName = "sun.max"
-                imageName = "clear"
-                navBarColor = UIColor(red: 51/255, green: 153/255, blue: 255/255, alpha: 0.6)
-            case "cloud":
-                iconName = "cloud"
-                imageName = "clouds-bg"
-            case "cloud.drizzle":
-                iconName = "cloud.drizzle"
-                imageName = "clear"
-            case "cloud.moon":
-                iconName = "cloud.moon"
-                imageName = "cloud-moon-bg"
-            case "moon.stars":
-                iconName = "moon.stars"
-                imageName = "moon-stars-bg"
-            case "cloud.sun":
-                iconName = "cloud.sun"
-                imageName = "cloud-sun-bg"
-            default:
-                imageName = "clouds2"
-                
-        }
-        
-        weatherIconImageView.image = UIImage(named: iconName)
-        bgImageView.image =  UIImage(named: imageName)
-        
-        let precipitationChance = (location.weather?.hourlyForecast.forecast[0].precipitationChance)! * 100
-        let precipitationChanceFormatted = String(format: "%.0f", precipitationChance)
-        precipitationLabel.text = "\(precipitationChanceFormatted)%"
-        
-        
-        let cloudCoverage = (location.weather?.currentWeather.cloudCover)! * 100
-        let cloudCoverageFormatted = String(format: "%.0f", cloudCoverage)
-        cloudCoverLabel.text = "\(cloudCoverageFormatted)%"
-
-        
-        let windSpeed = location.weather?.currentWeather.wind.speed.value
-        let windFormatted = String(format: "%.0f", windSpeed!)
-        windLabel.text = "\(windFormatted) km/h"
-        
-        
-        weatherDescLabel.text = location.weather?.currentWeather.condition.description
     }
 }

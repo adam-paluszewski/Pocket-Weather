@@ -34,7 +34,8 @@ class PWWeatherHeaderView: UIView {
     
     func configure() {
         cityLabel.font = .systemFont(ofSize: 30, weight: .medium)
-        fetchingWeatherLabel.font = .systemFont(ofSize: 36, weight: .bold)
+        fetchingWeatherLabel.font = .systemFont(ofSize: 32, weight: .regular)
+        fetchingWeatherLabel.numberOfLines = 0
         conditionLabel.font = .systemFont(ofSize: 18, weight: .regular)
         
         temperatureLabel.font = .systemFont(ofSize: 100, weight: .thin)
@@ -64,8 +65,10 @@ class PWWeatherHeaderView: UIView {
         addSubview(conditionLabel)
         
         NSLayoutConstraint.activate([
-            fetchingWeatherLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            fetchingWeatherLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            fetchingWeatherLabel.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 10),
+            fetchingWeatherLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -50),
+//            fetchingWeatherLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 25),
+//            fetchingWeatherLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -25),
             
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 10),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -15),
@@ -99,10 +102,11 @@ class PWWeatherHeaderView: UIView {
         formatter.unitStyle = .short
         formatter.numberFormatter.maximumFractionDigits = 0
         
-        let tempString = formatter.string(from: (location.weather?.currentWeather.temperature)!)
-        temperatureLabel.text = tempString
-
-
+        if let temperature = location.weather?.currentWeather.temperature {
+            let tempString = formatter.string(from: temperature)
+            temperatureLabel.text = tempString
+        }
+        
         conditionLabel.text = location.weather?.currentWeather.condition.description
     }
     

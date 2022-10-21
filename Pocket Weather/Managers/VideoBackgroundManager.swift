@@ -5,7 +5,7 @@
 //  Created by Adam Paluszewski on 19/10/2022.
 //
 
-import AVKit
+import AVFoundation
 import UIKit
 
 
@@ -13,7 +13,8 @@ class VideoBackgroundManager {
     var player: AVPlayer?
     var isVideonEndingBeingObserved = false
     
-    func returnPlayerLayer(in view: UIView, with filename: String) -> AVPlayerLayer {
+    func addPlayerLayer(in view: UIView, with filename: String) {
+        
         let videoURL = Bundle.main.url(forResource: filename, withExtension: "mp4")!
         player = AVPlayer(url: videoURL as URL)
         player?.actionAtItemEnd = .none
@@ -27,9 +28,17 @@ class VideoBackgroundManager {
         player?.play()
         
         addObserverForPlayerEnding()
-
         
-        return playerLayer
+        playerLayer.opacity = 0
+        view.layer.addSublayer(playerLayer)
+
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = 0
+        animation.toValue = 1
+        animation.duration = 2
+        playerLayer.add(animation, forKey: nil)
+        
+        playerLayer.opacity = 1
     }
     
     

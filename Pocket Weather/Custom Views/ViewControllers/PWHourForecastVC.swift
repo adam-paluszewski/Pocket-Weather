@@ -49,7 +49,7 @@ class PWHourForecastVC: UIViewController {
         view.clipsToBounds = true
 //        view.backgroundColor = UIColor(red: 71/255, green: 139/255, blue: 174/255, alpha: 0.65)
 //        view.backgroundColor = UIHelper.getImagesAndColors(for: weatherSymbol).sectionColor
-        view.layer.cornerRadius = 10
+        view.layer.cornerRadius = 20
         headerView.segmentedControl.addTarget(self, action: #selector(hoursSegmentedControlValueChanged), for: .valueChanged)
         
         layoutUI()
@@ -93,7 +93,17 @@ class PWHourForecastVC: UIViewController {
 extension PWHourForecastVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let numberOfRows = headerView.segmentedControl.selectedSegmentIndex == 0 ? 12 : 24
+        var numberOfRows: Int!
+        switch headerView.segmentedControl.selectedSegmentIndex {
+            case 0:
+                numberOfRows = 6
+            case 1:
+                numberOfRows = 12
+            case 2:
+                numberOfRows = 24
+            default:
+                numberOfRows = 0
+        }
         return min(numberOfRows, forecast.count)
     }
     

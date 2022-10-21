@@ -123,7 +123,6 @@ extension SearchResultsVC: UITableViewDataSource, UITableViewDelegate {
             WeatherManager.shared.fetchWeather(for: location) { result in
                 switch result {
                     case .success(let weather):
-                        self.locationData?.weather = weather
                         self.delegate?.locationWasTapped(location: self.locationData!)
                         DispatchQueue.main.async {
                             self.dismiss(animated: true)

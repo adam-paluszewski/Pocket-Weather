@@ -18,7 +18,6 @@ struct UIHelper {
         gradient.colors = colors
         gradient.startPoint = startPoint
         gradient.endPoint = endPoint
-        gradient.locations = [0, 0.1, 0.9, 1]
         view.layer.insertSublayer(gradient, at: 0)
     }
     
@@ -47,4 +46,20 @@ struct UIHelper {
     }
     
     
+    static func addGradientAnimation(in view: UIView) {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+        gradientLayer.frame = view.frame
+        gradientLayer.zPosition = -1
+        view.layer.addSublayer(gradientLayer)
+
+        let animation = CABasicAnimation(keyPath: "colors")
+        animation.fromValue = [UIColor(red: 68/255, green: 149/255, blue: 230/255, alpha: 1).cgColor, UIColor(red: 171/255, green: 203/255, blue: 235/255, alpha: 1).cgColor]
+        animation.toValue = [UIColor(red: 46/255, green: 104/255, blue: 161/255, alpha: 1).cgColor, UIColor(red: 138/255, green: 150/255, blue: 162/255, alpha: 1).cgColor]
+        animation.duration = 1
+        gradientLayer.add(animation, forKey: nil)
+        
+        gradientLayer.colors = [UIColor(red: 46/255, green: 104/255, blue: 161/255, alpha: 1).cgColor, UIColor(red: 138/255, green: 150/255, blue: 162/255, alpha: 1).cgColor]
+    }
 }

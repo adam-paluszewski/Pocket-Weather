@@ -75,7 +75,7 @@ class PWDayForecastHeaderView: UIView {
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
             titleLabel.heightAnchor.constraint(equalToConstant: 30),
             
-            hLine.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 6),
+            hLine.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
             hLine.leadingAnchor.constraint(equalTo: leadingAnchor),
             hLine.trailingAnchor.constraint(equalTo: trailingAnchor),
             hLine.heightAnchor.constraint(equalToConstant: 0.25),
