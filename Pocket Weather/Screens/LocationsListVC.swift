@@ -14,10 +14,11 @@ class LocationsListVC: UIViewController {
     let searchResultsVC = SearchResultsVC()
     lazy var searchController = UISearchController(searchResultsController: searchResultsVC)
     @UsesAutoLayout var tableView = UITableView()
+    
     let location = CLLocation()
     
     var locationsData: [LocationData] = []
-    
+    var searchCompleter = MKLocalSearchCompleter()
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -31,15 +32,6 @@ class LocationsListVC: UIViewController {
         configureSearchController()
         configureTableView()
         addObservers()
-        
-        
-        let searchRequest = MKLocalSearch.Request()
-        searchRequest.naturalLanguageQuery = "Wars"
-        let search = MKLocalSearch(request: searchRequest)
-        search.start { response, error in
-            print(response)
-        }
-        
         
         PersistenceManager.shared.retrieveLocations { result in
             switch result {
@@ -96,7 +88,7 @@ class LocationsListVC: UIViewController {
       
 
     func configureViewController() {
-        navigationItem.title = "Locations"
+        navigationItem.title = Localization.locations
         navigationController?.navigationBar.prefersLargeTitles = true
         layoutUI()
 
@@ -118,12 +110,13 @@ class LocationsListVC: UIViewController {
 
     
     func configureSearchController() {
-        searchController.searchBar.placeholder = "Add more locations"
+        searchController.searchBar.placeholder = Localization.searchLocations
         navigationItem.searchController = searchController
         searchController.searchBar.delegate = self
         searchController.searchResultsUpdater = self
         searchController.searchBar.returnKeyType = .done
         searchResultsVC.delegate = self
+        searchCompleter.delegate = self
     }
     
     
@@ -149,10 +142,15 @@ class LocationsListVC: UIViewController {
     
     @objc func fireObserver(notification: NSNotification) {
         if let location = notification.object as? LocationData {
-            self.locationsData.append(location)
-            tableView.reloadDataOnMainThread()
+            if locationsData.contains{$0.city == location.city} {
+                presentAlertOnMainThread(title: Localization.error, message: Localization.cityAlreadyOnList, buttonTitle: "OK", buttonColor: .red, buttonSystemImage: .checkmark)
+            } else {
+                PersistenceManager.shared.updateWith(location: location, actionType: .add) { error in
+                    locationsData.append(location)
+                    tableView.reloadDataOnMainThread()
+                }
+            }
         }
-
     }
     
     
@@ -163,7 +161,7 @@ class LocationsListVC: UIViewController {
             tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 }
@@ -172,14 +170,8 @@ class LocationsListVC: UIViewController {
 extension LocationsListVC: UISearchResultsUpdating, UISearchBarDelegate {
     
     func updateSearchResults(for searchController: UISearchController) {
-        searchResultsVC.isFetchingData = true
-        location.fetchCoordinates(city: searchController.searchBar.text!, completion: { coordinate, error in
-            let location = CLLocation(latitude: coordinate?.latitude ?? 0, longitude: coordinate?.longitude ?? 0)
-            location.fetchCityAndCountry(location: location, completion: { city, country, error in
-                self.searchResultsVC.locationData = LocationData(lat: location.coordinate.latitude, lon: location.coordinate.longitude, city: city ?? "Unknown city", country: country ?? "Unknown country", weather: nil)
-                self.searchResultsVC.isFetchingData = false
-            })
-        })
+        guard let text = searchController.searchBar.text else { return }
+        searchCompleter.queryFragment = text
     }
     
     
@@ -189,6 +181,9 @@ extension LocationsListVC: UISearchResultsUpdating, UISearchBarDelegate {
     }
     
     
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchResultsVC.results = []
+    }
 }
 
 
@@ -218,7 +213,7 @@ extension LocationsListVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         if indexPath.row == 0 {
-            let info = UIContextualAction(style: .normal, title: "You can't delete current location") { action, view, handler in
+            let info = UIContextualAction(style: .normal, title: Localization.cantDeleteCurrentLocation) { action, view, handler in
                 handler(false)
             }
             info.backgroundColor = .tertiarySystemBackground
@@ -226,7 +221,7 @@ extension LocationsListVC: UITableViewDataSource, UITableViewDelegate {
             return UISwipeActionsConfiguration(actions: [info])
             
         } else {
-            let delete = UIContextualAction(style: .destructive, title: "Delete") { action, view, handler in
+            let delete = UIContextualAction(style: .destructive, title: Localization.delete) { action, view, handler in
                 let location = self.locationsData[indexPath.row]
                 PersistenceManager.shared.updateWith(location: location, actionType: .remove) { error in
                     if let error = error {
@@ -255,6 +250,7 @@ extension LocationsListVC: SearchResultsDelegate {
 
         DispatchQueue.main.async {
             self.searchController.searchBar.text = ""
+            self.searchResultsVC.results = []
             
             let weatherVC = WeatherVC(location: location, type: .searchResult)
             weatherVC.isModalInPresentation = true
@@ -262,6 +258,61 @@ extension LocationsListVC: SearchResultsDelegate {
             self.navigationController?.present(navController, animated: true)
         }
     }
-    
-    
 }
+
+
+extension LocationsListVC: MKLocalSearchCompleterDelegate {
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        completer.resultTypes = .address
+        let citiesList = getCityList(results: completer.results)
+        searchResultsVC.results = Array(Set(citiesList))
+    }
+    
+    
+    func getCityList(results: [MKLocalSearchCompletion]) -> [SearchResult]{
+        
+        var searchResults: [SearchResult] = []
+        
+        for result in results {
+            let titleComponents = result.title.components(separatedBy: ", ")
+            let subtitleComponents = result.subtitle.components(separatedBy: ", ")
+            
+            buildCityTypeA(titleComponents, subtitleComponents){place in
+                if place.city != "" && place.country != ""{
+                    searchResults.append(SearchResult(city: place.city, country: place.country))
+                }
+            }
+    
+            buildCityTypeB(titleComponents, subtitleComponents){place in
+                if place.city != "" && place.country != ""{
+                    searchResults.append(SearchResult(city: place.city, country: place.country))
+                }
+            }
+        }
+        return searchResults
+    }
+    
+    
+    func buildCityTypeA(_ title: [String],_ subtitle: [String], _ completion: @escaping ((city: String, country: String)) -> Void){
+        var city: String = ""
+        var country: String = ""
+        
+        if title.count > 1 && subtitle.count >= 1 {
+            city = title.first!
+            country = subtitle.count == 1 && subtitle[0] != "" ? subtitle.first! : title.last!
+        }
+        completion((city, country))
+    }
+
+    func buildCityTypeB(_ title: [String],_ subtitle: [String], _ completion: @escaping ((city: String, country: String)) -> Void){
+        var city: String = ""
+        var country: String = ""
+        
+        if title.count >= 1 && subtitle.count == 1 {
+            city = title.first!
+            country = subtitle.last!
+        }
+        completion((city, country))
+    }
+}
+

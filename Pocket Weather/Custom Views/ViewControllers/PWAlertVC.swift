@@ -55,6 +55,7 @@ class PWAlertVC: UIViewController {
         containerView.backgroundColor = .systemBackground
         containerView.layer.borderWidth = 2
         containerView.layer.borderColor = UIColor.secondaryLabel.cgColor
+        containerView.layer.cornerRadius = 10
         
         //titleLabel
         containerView.addSubview(titleLabel)

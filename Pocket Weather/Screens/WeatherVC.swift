@@ -32,7 +32,7 @@ class WeatherVC: UIViewController {
     let videoBackgroundManager = VideoBackgroundManager()
     
     var location: LocationData!
-    var weatherAssets: WeatherAssets!
+    var weatherAssets: CurrentWeatherAssets!
     
     
     init(location: LocationData?, type: WeatherVCType) {
@@ -44,25 +44,23 @@ class WeatherVC: UIViewController {
                 let rightButton = UIBarButtonItem(title: "OK", style: .plain, target: self, action: #selector(barButtonTapped))
                 navigationItem.rightBarButtonItem = rightButton
             case .searchResult:
-                let leftButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(barButtonTapped))
+                let leftButton = UIBarButtonItem(title: Localization.cancel, style: .plain, target: self, action: #selector(barButtonTapped))
                 navigationItem.leftBarButtonItem = leftButton
-                let rightButton = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(barButtonTapped))
+                let rightButton = UIBarButtonItem(title: Localization.add, style: .plain, target: self, action: #selector(barButtonTapped))
                 navigationItem.rightBarButtonItem = rightButton
             default:
                 print()
         }
-
-
-    }
-    
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
     
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     
@@ -76,9 +74,7 @@ class WeatherVC: UIViewController {
     
     
     func configureViewController() {
-//        view.backgroundColor = UIColor(patternImage: UIImage(named: "main-bg")!)
         UIHelper.addGradientAnimation(in: view)
-        
         scrollView.delegate = self
         layoutUI()
     }
@@ -87,13 +83,6 @@ class WeatherVC: UIViewController {
     func addChildrenViewControllers() {
         add(childVC: hourlyForecastVC, to: self.hourForecastView)
         add(childVC: dailyForecastVC, to: self.dayForecastView)
-    }
-    
-    
-    @objc func sceneDidBecomeActive() {
-        if let location {
-            fetchWeather(for: location.coordinates)
-        }
     }
     
     
@@ -106,6 +95,15 @@ class WeatherVC: UIViewController {
     }
     
     
+    @objc func sceneDidBecomeActive() {
+        if let location {
+            fetchWeather(for: location.coordinates)
+        } else {
+            getLocation()
+        }
+    }
+    
+    
     @objc func barButtonTapped(_ sender: UIBarButtonItem) {
         switch sender.title {
             case "OK", "Cancel":
@@ -114,9 +112,6 @@ class WeatherVC: UIViewController {
                 let name = Notification.Name("addToSavedLocationsList")
                 NotificationCenter.default.post(name: name, object: location)
                 self.location.weather = nil
-                PersistenceManager.shared.updateWith(location: location, actionType: .add) { error in
-                    
-                }
                 dismiss(animated: true)
             default:
                 print()
@@ -125,14 +120,55 @@ class WeatherVC: UIViewController {
     }
     
     
+    func fetchWeather(for location: CLLocation) {
+        headerView.fetchingWeatherLabel.text = Localization.fetchingWeather
+        WeatherManager.shared.fetchWeather(for: location) { [weak self] result in
+            guard let self else { return }
+            switch result {
+                case .success(let weather):
+                    self.location.weather = weather
+                    self.updateUI()
+                    weather.currentWeather.condition.description
+                    print("🟡 symbol \(self.location.weather!.currentWeather.symbolName) and condition: \(self.location.weather!.currentWeather.condition.description), clouds:  \(self.location.weather!.currentWeather.cloudCover.description)")
+                case .failure(let error):
+                    self.presentAlertOnMainThread(title: Localization.error, message: Localization.couldntGetWeather, buttonTitle: "OK", buttonColor: .systemRed, buttonSystemImage: .checkmark)
+            }
+        }
+    }
+    
+    
+    func getLocation() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        
+        switch locationManager.authorizationStatus {
+            case .notDetermined:
+                locationManager.requestWhenInUseAuthorization()
+            case .denied:
+                headerView.fetchingWeatherLabel.text = Localization.locationDisabled
+            case .authorizedWhenInUse:
+                locationManager.startUpdatingLocation()
+            default:
+                print()
+        }
+    }
+    
+    
+    func stopUpdatingLocation() {
+        locationManager.delegate = nil
+        locationManager.stopUpdatingLocation()
+    }
+    
+    
     func updateUI() {
         DispatchQueue.main.async {
-            self.weatherAssets = WeatherAssets(symbol: self.location.weather?.currentWeather.symbolName, condition: self.location.weather?.currentWeather.condition.description)
+            self.weatherAssets = CurrentWeatherAssets(weather: self.location.weather)
             self.headerView.set(for: self.location)
             UIView.animate(withDuration: 2) {
                 self.hourlyForecastVC.view.backgroundColor = self.weatherAssets.sectionColor
                 self.dailyForecastVC.view.backgroundColor = self.weatherAssets.sectionColor
             }
+            
             self.hourlyForecastVC.forecast = (self.location.weather?.hourlyForecast.forecast)!
             self.dailyForecastVC.forecast = (self.location.weather?.dailyForecast.forecast)!
             self.videoBackgroundManager.addPlayerLayer(in: self.view, with: self.weatherAssets.dynamicVerticalBgName)
@@ -142,40 +178,6 @@ class WeatherVC: UIViewController {
             }
         }
         
-    }
-
-    
-    func fetchWeather(for location: CLLocation) {
-        WeatherManager.shared.fetchWeather(for: location) { [weak self] result in
-            guard let self else { return }
-            switch result {
-                case .success(let weather):
-                    self.location.weather = weather
-                    self.updateUI()
-                    
-                    print("symbol \(self.location.weather!.currentWeather.symbolName) and condition: \(self.location.weather!.currentWeather.condition.description), clouds:  \(self.location.weather!.currentWeather.cloudCover.description)")
-                case .failure(let error):
-                    print()
-            }
-        }
-    }
-    
-    
-    func getLocation() {
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
-        
-        if locationManager.authorizationStatus == .authorizedWhenInUse {
-            locationManager.startUpdatingLocation()
-        } else {
-            locationManager.requestWhenInUseAuthorization()
-        }
-    }
-
-
-    func stopUpdatingLocation() {
-        locationManager.delegate = nil
-        locationManager.stopUpdatingLocation()
     }
     
     
@@ -203,8 +205,6 @@ class WeatherVC: UIViewController {
         stackView.axis = .vertical
         stackView.spacing = 10
         
-        
-        
         hourForecastViewHeightConstraint = hourForecastView.heightAnchor.constraint(equalToConstant: 660)
         dayForecastViewHeightConstraint = hourForecastView.heightAnchor.constraint(equalToConstant: 635)
         
@@ -214,10 +214,9 @@ class WeatherVC: UIViewController {
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            headerView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
+            headerView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.35),
             
             hourForecastViewHeightConstraint,
-            
 
             stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 15),
@@ -229,14 +228,14 @@ class WeatherVC: UIViewController {
 }
 
 
-
-
-
 extension WeatherVC: CLLocationManagerDelegate {
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        if manager.authorizationStatus == .authorizedWhenInUse {
+        let authorizationStatus = manager.authorizationStatus
+        if authorizationStatus == .authorizedWhenInUse {
             locationManager.startUpdatingLocation()
+        } else if authorizationStatus == .denied {
+            headerView.fetchingWeatherLabel.text = Localization.locationDisabled
         }
     }
     
@@ -272,7 +271,7 @@ extension WeatherVC: UIScrollViewDelegate {
 
         headerView.animate(offset: offset)
         
-        if offset > (view.safeAreaLayoutGuide.layoutFrame.height / 2) {
+        if offset > (view.safeAreaLayoutGuide.layoutFrame.height * 0.35) {
             navigationItem.titleView = PWNavBarTitleView(location: location)
             UINavigationBarAppearance.setupNavBarAppearance(for: navigationController!.navigationBar, color: weatherAssets.sectionColor)
         } else {

@@ -23,7 +23,7 @@ class WeatherManager {
                 completion(.failure(PWError.unableToFetchWeather))
                 print("Couldnt get weather data answer")
             }
-
+            
         }
     }
     

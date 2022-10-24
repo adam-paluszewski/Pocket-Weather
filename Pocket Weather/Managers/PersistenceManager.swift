@@ -55,8 +55,10 @@ struct PersistenceManager {
                         case .addMyLocation:
                             if locations.isEmpty {
                                 locations.append(location)
-                            } else {
+                            } else if locations[0].city == location.city {
                                 locations[0] = location
+                            } else {
+                                locations.insert(location, at: 0)
                             }
                         case .add:
                             var filteredLocations: [String] = [] //objects have different date so they are always different, cant check 'contains'

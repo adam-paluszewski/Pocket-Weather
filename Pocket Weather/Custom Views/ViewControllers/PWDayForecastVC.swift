@@ -21,20 +21,8 @@ class PWDayForecastVC: UIViewController {
             }
         }
     }
+
     
-    
-//    init(forecast: Weather) {
-//        super.init(nibName: nil, bundle: nil)
-//        self.forecast = forecast.dailyForecast.forecast
-//        self.weatherSymbol = forecast.currentWeather.symbolName
-//    }
-//
-//
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewController()
@@ -53,7 +41,7 @@ class PWDayForecastVC: UIViewController {
         view.clipsToBounds = true
         view.backgroundColor = UIColor(red: 71/255, green: 139/255, blue: 174/255, alpha: 0.65)
 //        view.backgroundColor = UIHelper.getImagesAndColors(for: weatherSymbol).sectionColor
-        view.layer.cornerRadius = 20
+        view.layer.cornerRadius = 16
         
         layoutUI()
     }

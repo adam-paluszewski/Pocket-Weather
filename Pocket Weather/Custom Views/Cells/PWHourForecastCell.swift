@@ -16,7 +16,7 @@ class PWHourForecastCell: UITableViewCell {
     @UsesAutoLayout var hourLabel = PWBodyLabel(textAlignment: .center, fontWeight: .bold)
 
     @UsesAutoLayout var conditionView = PWConditionView()
-    @UsesAutoLayout var precipitationLabel = PWCaptionLabel(textAlignment: .center)
+    @UsesAutoLayout var precipitationLabel = PWBodyLabel(textAlignment: .center)
     @UsesAutoLayout var cloudsView = PWCloudsView()
     @UsesAutoLayout var windView = PWWindView()
     
@@ -41,6 +41,7 @@ class PWHourForecastCell: UITableViewCell {
         stackView.axis = .horizontal
         stackView.distribution = .equalSpacing
         
+        precipitationLabel.font = .systemFont(ofSize: 16, weight: .light)
     }
     
     

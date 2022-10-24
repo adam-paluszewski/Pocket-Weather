@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E9B34AE42906A1D800779C92 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B34AE32906A1D800779C92 /* SearchResult.swift */; };
+		E9B34AF62906FC9B00779C92 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9B34AF82906FC9B00779C92 /* Localizable.strings */; };
+		E9B34AFB2906FF0D00779C92 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B34AFA2906FF0D00779C92 /* Localization.swift */; };
 		E9B5163228F02E410025590F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5163128F02E410025590F /* AppDelegate.swift */; };
 		E9B5163428F02E410025590F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5163328F02E410025590F /* SceneDelegate.swift */; };
 		E9B5163628F02E410025590F /* WeatherVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5163528F02E410025590F /* WeatherVC.swift */; };
@@ -49,7 +52,7 @@
 		E9B6A72328FEC01300080EC9 /* PWNavBarTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B6A72228FEC01300080EC9 /* PWNavBarTitleView.swift */; };
 		E9B6A72728FF47BF00080EC9 /* UITabBarAppearanceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B6A72628FF47BF00080EC9 /* UITabBarAppearanceExt.swift */; };
 		E9B6A72E2900011C00080EC9 /* VideoBackgroundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B6A72D2900011C00080EC9 /* VideoBackgroundManager.swift */; };
-		E9B6A73A29001AE300080EC9 /* WeatherAssets.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B6A73929001AE300080EC9 /* WeatherAssets.swift */; };
+		E9B6A73A29001AE300080EC9 /* CurrentWeatherAssets.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B6A73929001AE300080EC9 /* CurrentWeatherAssets.swift */; };
 		E9B6A73F2900300E00080EC9 /* mostly-cloudy-vd.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E9B6A73E2900300E00080EC9 /* mostly-cloudy-vd.mp4 */; };
 		E9B6A7452900446B00080EC9 /* partly-cloudy-vd.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E9B6A7442900446B00080EC9 /* partly-cloudy-vd.mp4 */; };
 		E9B6A74B2900526800080EC9 /* clear-vd.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E9B6A74A2900526800080EC9 /* clear-vd.mp4 */; };
@@ -65,6 +68,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E9B34AE32906A1D800779C92 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
+		E9B34AF32906FBC700779C92 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		E9B34AF72906FC9B00779C92 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E9B34AF92906FCB100779C92 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E9B34AFA2906FF0D00779C92 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		E9B5162E28F02E410025590F /* Pocket Weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pocket Weather.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9B5163128F02E410025590F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E9B5163328F02E410025590F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -110,7 +118,7 @@
 		E9B6A72228FEC01300080EC9 /* PWNavBarTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PWNavBarTitleView.swift; sourceTree = "<group>"; };
 		E9B6A72628FF47BF00080EC9 /* UITabBarAppearanceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITabBarAppearanceExt.swift; sourceTree = "<group>"; };
 		E9B6A72D2900011C00080EC9 /* VideoBackgroundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoBackgroundManager.swift; sourceTree = "<group>"; };
-		E9B6A73929001AE300080EC9 /* WeatherAssets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAssets.swift; sourceTree = "<group>"; };
+		E9B6A73929001AE300080EC9 /* CurrentWeatherAssets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeatherAssets.swift; sourceTree = "<group>"; };
 		E9B6A73E2900300E00080EC9 /* mostly-cloudy-vd.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mostly-cloudy-vd.mp4"; sourceTree = "<group>"; };
 		E9B6A7442900446B00080EC9 /* partly-cloudy-vd.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "partly-cloudy-vd.mp4"; sourceTree = "<group>"; };
 		E9B6A74A2900526800080EC9 /* clear-vd.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "clear-vd.mp4"; sourceTree = "<group>"; };
@@ -136,6 +144,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E9B34AE52906B6D200779C92 /* horizontal-bg */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "horizontal-bg";
+			sourceTree = "<group>";
+		};
 		E9B5162528F02E400025590F = {
 			isa = PBXGroup;
 			children = (
@@ -208,7 +223,8 @@
 			isa = PBXGroup;
 			children = (
 				E9B5168C28F88AA30025590F /* LocationData.swift */,
-				E9B6A73929001AE300080EC9 /* WeatherAssets.swift */,
+				E9B6A73929001AE300080EC9 /* CurrentWeatherAssets.swift */,
+				E9B34AE32906A1D800779C92 /* SearchResult.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -230,6 +246,7 @@
 				E9B6A71528F96B0900080EC9 /* PWError.swift */,
 				E9B6A71C28FD759C00080EC9 /* Constants.swift */,
 				E9B6A71E28FD84C600080EC9 /* UIHelper.swift */,
+				E9B34AFA2906FF0D00779C92 /* Localization.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -237,11 +254,13 @@
 		E9B5166828F5A0900025590F /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				E9B34AE52906B6D200779C92 /* horizontal-bg */,
 				E9B6A73B290022CB00080EC9 /* Dynamic Bgs */,
 				E9B5163328F02E410025590F /* SceneDelegate.swift */,
 				E9B5163128F02E410025590F /* AppDelegate.swift */,
 				E9B5163C28F02E430025590F /* LaunchScreen.storyboard */,
 				E9B5163A28F02E430025590F /* Assets.xcassets */,
+				E9B34AF82906FC9B00779C92 /* Localizable.strings */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -370,6 +389,7 @@
 			knownRegions = (
 				en,
 				Base,
+				pl,
 			);
 			mainGroup = E9B5162528F02E400025590F;
 			productRefGroup = E9B5162F28F02E410025590F /* Products */;
@@ -389,6 +409,7 @@
 				E9B5163E28F02E430025590F /* LaunchScreen.storyboard in Resources */,
 				E9B6A7612902EFF200080EC9 /* moon-stars-vd.mp4 in Resources */,
 				E9B6A759290153ED00080EC9 /* cloud-vd.mp4 in Resources */,
+				E9B34AF62906FC9B00779C92 /* Localizable.strings in Resources */,
 				E9B6A74D290052FF00080EC9 /* mostly-clear-vd.mp4 in Resources */,
 				E9B6A74F290054BD00080EC9 /* cloud-moon-vd.mp4 in Resources */,
 				E9B6A75D29015BD800080EC9 /* wind-vd.mp4 in Resources */,
@@ -422,12 +443,13 @@
 				E9B6A72728FF47BF00080EC9 /* UITabBarAppearanceExt.swift in Sources */,
 				E9B5168528F83C560025590F /* LocationsListVC.swift in Sources */,
 				E9B5167B28F6EB8A0025590F /* PWDayForecastCell.swift in Sources */,
+				E9B34AE42906A1D800779C92 /* SearchResult.swift in Sources */,
 				E9B5163628F02E410025590F /* WeatherVC.swift in Sources */,
 				E9B5163228F02E410025590F /* AppDelegate.swift in Sources */,
 				E9B6A72128FDB08900080EC9 /* UIViewExt.swift in Sources */,
 				E9B6A72328FEC01300080EC9 /* PWNavBarTitleView.swift in Sources */,
 				E9B5167528F6E6EC0025590F /* PWDayForecastVC.swift in Sources */,
-				E9B6A73A29001AE300080EC9 /* WeatherAssets.swift in Sources */,
+				E9B6A73A29001AE300080EC9 /* CurrentWeatherAssets.swift in Sources */,
 				E9B5165D28F443190025590F /* UIViewControllerExt.swift in Sources */,
 				E9B5166F28F6C4970025590F /* PWCloudsView.swift in Sources */,
 				E9B5167328F6C76D0025590F /* PWConditionView.swift in Sources */,
@@ -442,6 +464,7 @@
 				E9B5165F28F455DA0025590F /* PWHourForecastHeaderView.swift in Sources */,
 				E9B5168D28F88AA30025590F /* LocationData.swift in Sources */,
 				E9B5164728F03A8D0025590F /* CLLocationExt.swift in Sources */,
+				E9B34AFB2906FF0D00779C92 /* Localization.swift in Sources */,
 				E9B5168728F84D9C0025590F /* SearchResultsVC.swift in Sources */,
 				E9B5164928F03C370025590F /* PWTabBarController.swift in Sources */,
 				E9B6A71628F96B0900080EC9 /* PWError.swift in Sources */,
@@ -457,10 +480,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		E9B34AF82906FC9B00779C92 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E9B34AF72906FC9B00779C92 /* en */,
+				E9B34AF92906FCB100779C92 /* pl */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		E9B5163C28F02E430025590F /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				E9B5163D28F02E430025590F /* Base */,
+				E9B34AF32906FBC700779C92 /* pl */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -472,6 +505,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -532,6 +566,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";

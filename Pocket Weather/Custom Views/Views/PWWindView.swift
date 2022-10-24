@@ -139,12 +139,30 @@ class PWWindView: UIView {
         windImageView.image = image
         
         switch windSpeed {
-            case 0...14:
-                windImageView.tintColor = .systemGreen
-            case 14...20:
+            case 0...20:
+                windImageView.tintColor = UIColor(red: 53/255, green: 81/255, blue: 92/255, alpha: 1)
+                NSLayoutConstraint.activate([
+                    windImageView.widthAnchor.constraint(equalToConstant: 17),
+                    windImageView.heightAnchor.constraint(equalToConstant: 17),
+                ])
+            case 21...40:
                 windImageView.tintColor = .systemYellow
-            case 21...30:
+                NSLayoutConstraint.activate([
+                    windImageView.widthAnchor.constraint(equalToConstant: 19),
+                    windImageView.heightAnchor.constraint(equalToConstant: 19),
+                ])
+            case 41...60:
                 windImageView.tintColor = .systemRed
+                NSLayoutConstraint.activate([
+                    windImageView.widthAnchor.constraint(equalToConstant: 21),
+                    windImageView.heightAnchor.constraint(equalToConstant: 21),
+                ])
+            case 61...80:
+                windImageView.tintColor = .systemRed
+                NSLayoutConstraint.activate([
+                    windImageView.widthAnchor.constraint(equalToConstant: 23),
+                    windImageView.heightAnchor.constraint(equalToConstant: 23),
+                ])
             default:
                 print()
         }

@@ -49,7 +49,7 @@ class PWHourForecastVC: UIViewController {
         view.clipsToBounds = true
 //        view.backgroundColor = UIColor(red: 71/255, green: 139/255, blue: 174/255, alpha: 0.65)
 //        view.backgroundColor = UIHelper.getImagesAndColors(for: weatherSymbol).sectionColor
-        view.layer.cornerRadius = 20
+        view.layer.cornerRadius = 16
         headerView.segmentedControl.addTarget(self, action: #selector(hoursSegmentedControlValueChanged), for: .valueChanged)
         
         layoutUI()

@@ -11,6 +11,7 @@ import UIKit
 
 class VideoBackgroundManager {
     var player: AVPlayer?
+    var playerLayer: AVPlayerLayer?
     var isVideonEndingBeingObserved = false
     
     func addPlayerLayer(in view: UIView, with filename: String) {
@@ -19,26 +20,34 @@ class VideoBackgroundManager {
         player = AVPlayer(url: videoURL as URL)
         player?.actionAtItemEnd = .none
         player?.isMuted = true
+        
+        if let playerLayer = playerLayer {
+            view.layer.sublayers?.removeAll(where: { layer in
+                layer is AVPlayerLayer
+            })
+        }
+        
+        playerLayer = AVPlayerLayer(player: player)
+        playerLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        playerLayer?.zPosition = -1
 
-        let playerLayer = AVPlayerLayer(player: player)
-        playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        playerLayer.zPosition = -1
-
-        playerLayer.frame = view.frame
+        playerLayer?.frame = view.frame
+        
         player?.play()
         
         addObserverForPlayerEnding()
         
-        playerLayer.opacity = 0
-        view.layer.addSublayer(playerLayer)
+        playerLayer?.opacity = 0
+        
+        view.layer.addSublayer(playerLayer!)
 
         let animation = CABasicAnimation(keyPath: "opacity")
         animation.fromValue = 0
         animation.toValue = 1
-        animation.duration = 2
-        playerLayer.add(animation, forKey: nil)
+        animation.duration = 1
+        playerLayer?.add(animation, forKey: nil)
         
-        playerLayer.opacity = 1
+        playerLayer?.opacity = 1
     }
     
     
@@ -48,4 +57,6 @@ class VideoBackgroundManager {
             self.player?.play()
             }
     }
+    
+    
 }

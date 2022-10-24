@@ -16,6 +16,7 @@ class PWDayForecastHeaderView: UIView {
     @UsesAutoLayout var precipitationImageView = UIImageView()
     @UsesAutoLayout var windImageView = UIImageView()
     @UsesAutoLayout var conditionImageView = UIImageView()
+    @UsesAutoLayout var minTempImageView = UIImageView()
     
     
     override init(frame: CGRect) {
@@ -33,19 +34,22 @@ class PWDayForecastHeaderView: UIView {
         stackView.axis = .horizontal
         stackView.distribution = .equalSpacing
         
-        titleLabel.text = "Daily"
+        titleLabel.text = Localization.daily
         hourImageView.image = UIImage(named: "clock")
         conditionImageView.image = UIImage(named: "temp")
+        minTempImageView.image = UIImage(named: "temp-min")
         precipitationImageView.image = UIImage(named: "umbrella")
         windImageView.image = UIImage(named: "wind")
         
         hourImageView.contentMode = .scaleAspectFit
         conditionImageView.contentMode = .scaleAspectFit
+        minTempImageView.contentMode = .scaleAspectFit
         precipitationImageView.contentMode = .scaleAspectFit
         windImageView.contentMode = .scaleAspectFit
         
         hourImageView.tintColor = .label
         conditionImageView.tintColor = .label
+        minTempImageView.tintColor = .label
         precipitationImageView.tintColor = .label
         windImageView.tintColor = .label
         
@@ -62,6 +66,7 @@ class PWDayForecastHeaderView: UIView {
         addSubview(titleLabel)
         stackView.addArrangedSubview(hourImageView)
         stackView.addArrangedSubview(conditionImageView)
+        stackView.addArrangedSubview(minTempImageView)
         stackView.addArrangedSubview(precipitationImageView)
         stackView.addArrangedSubview(windImageView)
         
@@ -90,6 +95,9 @@ class PWDayForecastHeaderView: UIView {
 
             conditionImageView.heightAnchor.constraint(equalToConstant: imageHeight),
             conditionImageView.widthAnchor.constraint(equalToConstant: imageViewWidth),
+            
+            minTempImageView.heightAnchor.constraint(equalToConstant: imageHeight),
+            minTempImageView.widthAnchor.constraint(equalToConstant: imageViewWidth),
 
             precipitationImageView.heightAnchor.constraint(equalToConstant: imageHeight),
             precipitationImageView.widthAnchor.constraint(equalToConstant: imageViewWidth),

@@ -13,10 +13,9 @@ class PWWeatherHeaderView: UIView {
     @UsesAutoLayout var conditionLabel = PWBodyLabel(textAlignment: .center)
     @UsesAutoLayout var temperatureLabel = PWSectionHeaderLabel(textAlignment: .center)
     @UsesAutoLayout var cityLabel = PWSectionHeaderLabel(textAlignment: .center)
-    @UsesAutoLayout var stackView = UIStackView()
     @UsesAutoLayout var fetchingWeatherLabel = PWSectionHeaderLabel(textAlignment: .center)
     
-    var weatherAssets: WeatherAssets!
+    var weatherAssets: CurrentWeatherAssets!
     
     
     override init(frame: CGRect) {
@@ -38,18 +37,13 @@ class PWWeatherHeaderView: UIView {
         conditionLabel.font = .systemFont(ofSize: 18, weight: .regular)
         
         temperatureLabel.font = .systemFont(ofSize: 100, weight: .thin)
-        
-        stackView.axis = .horizontal
-        stackView.distribution = .equalCentering
-        
-        layer.cornerRadius = 10
-        
+
         cityLabel.addShadow()
         temperatureLabel.addShadow()
         fetchingWeatherLabel.addShadow()
         conditionLabel.addShadow()
         
-        fetchingWeatherLabel.text = "Checking weather..."
+        fetchingWeatherLabel.text = "Checking location..."
     
         addSubviews()
     }
@@ -57,29 +51,25 @@ class PWWeatherHeaderView: UIView {
     
     func addSubviews() {
         addSubview(cityLabel)
-        addSubview(stackView)
         addSubview(fetchingWeatherLabel)
-//        stackView.addArrangedSubview(weatherIconImageView)
-        stackView.addArrangedSubview(temperatureLabel)
+        addSubview(temperatureLabel)
         addSubview(conditionLabel)
         
         NSLayoutConstraint.activate([
-            fetchingWeatherLabel.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 10),
-            fetchingWeatherLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -50),
-//            fetchingWeatherLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 25),
-//            fetchingWeatherLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -25),
+            fetchingWeatherLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            fetchingWeatherLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 25),
+            fetchingWeatherLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -25),
             
-            stackView.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 10),
-            stackView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -15),
+            temperatureLabel.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 10),
+            temperatureLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -15),
+            temperatureLabel.widthAnchor.constraint(equalToConstant: 150),
             
-            cityLabel.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -10),
+            cityLabel.bottomAnchor.constraint(equalTo: temperatureLabel.topAnchor, constant: -10),
             cityLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
             cityLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
             cityLabel.heightAnchor.constraint(equalToConstant: 30),
              
-            temperatureLabel.widthAnchor.constraint(equalToConstant: 150),
-
-            conditionLabel.topAnchor.constraint(equalTo: stackView.bottomAnchor),
+            conditionLabel.topAnchor.constraint(equalTo: temperatureLabel.bottomAnchor),
             conditionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
             conditionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
             conditionLabel.heightAnchor.constraint(equalToConstant: 20),
@@ -110,12 +100,12 @@ class PWWeatherHeaderView: UIView {
     func animate(offset: CGFloat) {
         let viewHeight = frame.height
         
-        cityLabel.transform = CGAffineTransform(translationX: 0, y: offset * 0.8)
-        stackView.transform = CGAffineTransform(translationX: 0, y: offset * 0.8)
-        conditionLabel.transform = CGAffineTransform(translationX: 0, y: offset * 0.8)
+        cityLabel.transform = CGAffineTransform(translationX: 0, y: offset * 0.92)
+        temperatureLabel.transform = CGAffineTransform(translationX: 0, y: offset * 0.92)
+        conditionLabel.transform = CGAffineTransform(translationX: 0, y: offset * 0.9)
         
-        conditionLabel.alpha = 1 - (offset - viewHeight * 0.40) * 0.05 //1px = 5%
-        stackView.alpha = 1 - (offset - viewHeight * 0.55) * 0.05
+        conditionLabel.alpha = 1 - (offset - viewHeight * 0.30) * 0.05 //1px = 5%
+        temperatureLabel.alpha = 1 - (offset - viewHeight * 0.45) * 0.05
         cityLabel.alpha = 1 - (offset - viewHeight * 0.90) * 0.05
     }
 }

@@ -31,7 +31,7 @@ class PWTabBarController: UITabBarController {
 
     func createMainNC() -> UINavigationController {
         let mainVC = WeatherVC(location: nil, type: .myLocation)
-        mainVC.tabBarItem = UITabBarItem(title: "Weather", image: UIImage(systemName: "cloud.sun"), selectedImage: UIImage(systemName: "cloud.sun.fill"))
+        mainVC.tabBarItem = UITabBarItem(title: Localization.weather, image: UIImage(systemName: "cloud.sun"), selectedImage: UIImage(systemName: "cloud.sun.fill"))
         mainVC.tabBarItem.tag = 0
         return UINavigationController(rootViewController: mainVC)
     }
@@ -39,7 +39,7 @@ class PWTabBarController: UITabBarController {
     
     func createLocationsListNC() -> UINavigationController {
         let locationsVC = LocationsListVC()
-        locationsVC.tabBarItem = UITabBarItem(title: "Locations", image: UIImage(systemName: "map"), selectedImage: UIImage(systemName: "map.fill"))
+        locationsVC.tabBarItem = UITabBarItem(title: Localization.locations, image: UIImage(systemName: "map"), selectedImage: UIImage(systemName: "map.fill"))
         locationsVC.tabBarItem.tag = 1
         
         return UINavigationController(rootViewController: locationsVC)

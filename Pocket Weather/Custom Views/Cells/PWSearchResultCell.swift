@@ -12,7 +12,8 @@ class PWSearchResultCell: UITableViewCell {
     static let cellid = "SearchResultCell"
     
     @UsesAutoLayout var infoLabel = PWBodyLabel(textAlignment: .left)
-    @UsesAutoLayout var cityLabel = PWSectionHeaderLabel(textAlignment: .left)
+    @UsesAutoLayout var cityLabel = PWBodyLabel(textAlignment: .left)
+    @UsesAutoLayout var countryLabel = PWBodyLabel(textAlignment: .left)
 
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -29,43 +30,28 @@ class PWSearchResultCell: UITableViewCell {
     func configure() {
         backgroundColor = .clear
         accessoryType = .disclosureIndicator
+        countryLabel.textColor = .secondaryLabel
+        countryLabel.font = .systemFont(ofSize: 16, weight: .light)
         addSubviews()
     }
     
     
-    func set(isFetching: Bool, city: String?) {
-        switch isFetching {
-            case true:
-                accessoryType = .none
-                cityLabel.isHidden = true
-                infoLabel.textColor = .label
-                infoLabel.text = "Searching..."
-            case false:
-                if city == "Unknown city" {
-                    accessoryType = .none
-                    cityLabel.isHidden = true
-                    infoLabel.textColor = .secondaryLabel
-                    infoLabel.text = "No city found. Keep typing."
-                } else {
-                    accessoryType = .disclosureIndicator
-                    cityLabel.isHidden = false
-                    cityLabel.text = city
-                    infoLabel.text = "choose:"
-                }
-        }
+    func set(city: String, country: String) {
+        cityLabel.text = city + ","
+        countryLabel.text = country
     }
     
     
     func addSubviews() {
-        addSubview(infoLabel)
         addSubview(cityLabel)
+        addSubview(countryLabel)
         
         NSLayoutConstraint.activate([
-            infoLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            infoLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            cityLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            cityLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
             
-            cityLabel.firstBaselineAnchor.constraint(equalTo: infoLabel.firstBaselineAnchor),
-            cityLabel.leadingAnchor.constraint(equalTo: infoLabel.trailingAnchor, constant: 5)
+            countryLabel.firstBaselineAnchor.constraint(equalTo: cityLabel.firstBaselineAnchor),
+            countryLabel.leadingAnchor.constraint(equalTo: cityLabel.trailingAnchor, constant: 5)
         ])
     }
 }

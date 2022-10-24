@@ -35,7 +35,7 @@ class PWHourForecastHeaderView: UIView {
         stackView.axis = .horizontal
         stackView.distribution = .equalSpacing
         
-        titleLabel.text = "Hourly"
+        titleLabel.text = Localization.hourly
         hourImageView.image = UIImage(named: "clock")
         conditionImageView.image = UIImage(named: "temp")
         precipitationImageView.image = UIImage(named: "umbrella")

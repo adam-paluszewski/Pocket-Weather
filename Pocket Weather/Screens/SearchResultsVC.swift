@@ -7,6 +7,8 @@
 
 import UIKit
 import CoreLocation
+import MapKit
+
 
 
 protocol SearchResultsDelegate {
@@ -19,13 +21,7 @@ class SearchResultsVC: UIViewController {
     @UsesAutoLayout var containerView = UIView()
     @UsesAutoLayout var tableView = UITableView()
     
-    var locationData: LocationData? {
-        didSet {
-            tableView.reloadDataOnMainThread()
-        }
-    }
-    
-    var isFetchingData = false {
+    var results: [SearchResult] = [] {
         didSet {
             tableView.reloadDataOnMainThread()
         }
@@ -44,7 +40,7 @@ class SearchResultsVC: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let gradient = CAGradientLayer()
-        gradient.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 400)
+        gradient.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         gradient.colors = [UIColor(red: 53/255, green: 92/255, blue: 125/255, alpha: 1).cgColor,
                            UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1).cgColor]
         gradient.startPoint = CGPoint(x: 0, y: 0)
@@ -55,12 +51,7 @@ class SearchResultsVC: UIViewController {
     
     
     func configureViewController() {
-        
-        
         view.backgroundColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.8)
-        
-        
-        
         layoutUI()
     }
     
@@ -68,12 +59,9 @@ class SearchResultsVC: UIViewController {
     func configureTableView() {
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
-        
         tableView.dataSource = self
         tableView.delegate = self
-        
-        tableView.rowHeight = 100
-        
+        tableView.rowHeight = 55
         tableView.register(PWSearchResultCell.self, forCellReuseIdentifier: PWSearchResultCell.cellid)
     }
     
@@ -88,7 +76,7 @@ class SearchResultsVC: UIViewController {
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.heightAnchor.constraint(equalToConstant: 100),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             containerView.topAnchor.constraint(equalTo: view.topAnchor),
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -102,34 +90,39 @@ class SearchResultsVC: UIViewController {
 extension SearchResultsVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return results.count
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: PWSearchResultCell.cellid, for: indexPath) as! PWSearchResultCell
-        cell.set(isFetching: isFetchingData, city: locationData?.city)
+        let result = results[indexPath.row]
+        cell.set(city: result.city, country: result.country)
         return cell
     }
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if isFetchingData || locationData?.city == "Unknown city" {
+        showLoadingView(in: view)
+        
+        var location = LocationData()
+        location.city = results[indexPath.row].city
+        location.country = results[indexPath.row].country
+        
+        location.coordinates.fetchCoordinates(city: results[indexPath.row].city) { coordinate, error in
+            guard let coordinate = coordinate else { return }
+            location.lat = coordinate.latitude
+            location.lon = coordinate.longitude
             
-        } else {
-            let location = CLLocation(latitude: locationData!.lat, longitude: locationData!.lon)
-            showLoadingView(in: containerView)
-            WeatherManager.shared.fetchWeather(for: location) { result in
+            WeatherManager.shared.fetchWeather(for: location.coordinates) { result in
                 switch result {
                     case .success(let weather):
-                        self.locationData?.weather = weather
-                        self.delegate?.locationWasTapped(location: self.locationData!)
+                        location.weather = weather
+                        self.delegate?.locationWasTapped(location: location)
                         DispatchQueue.main.async {
+                            self.dismissLoadingView(in: self.view)
                             self.dismiss(animated: true)
-                            self.dismissLoadingView(in: self.containerView)
-                            
-
                         }
                     case .failure(let error):
                         print(error)
@@ -138,3 +131,5 @@ extension SearchResultsVC: UITableViewDataSource, UITableViewDelegate {
         }
     }
 }
+
+

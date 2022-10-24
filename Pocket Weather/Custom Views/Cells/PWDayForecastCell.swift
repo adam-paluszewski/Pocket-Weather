@@ -14,6 +14,7 @@ class PWDayForecastCell: UITableViewCell {
 
     @UsesAutoLayout var stackView = UIStackView()
     @UsesAutoLayout var dayLabel = PWBodyLabel(textAlignment: .center, fontWeight: .bold)
+    @UsesAutoLayout var minTempLabel = PWBodyLabel(textAlignment: .center)
 
     @UsesAutoLayout var conditionView = PWConditionView()
     @UsesAutoLayout var precipitationLabel = PWCaptionLabel(textAlignment: .center)
@@ -42,6 +43,7 @@ class PWDayForecastCell: UITableViewCell {
         
         precipitationLabel.textColor = .label
         
+        minTempLabel.font = .systemFont(ofSize: 16, weight: .light)
     }
     
     
@@ -49,6 +51,7 @@ class PWDayForecastCell: UITableViewCell {
         addSubview(stackView)
         stackView.addArrangedSubview(dayLabel)
         stackView.addArrangedSubview(conditionView)
+        stackView.addArrangedSubview(minTempLabel)
         stackView.addArrangedSubview(precipitationLabel)
         stackView.addArrangedSubview(windView)
         
@@ -63,7 +66,7 @@ class PWDayForecastCell: UITableViewCell {
             conditionView.widthAnchor.constraint(equalToConstant: 60),
             precipitationLabel.widthAnchor.constraint(equalToConstant: 60),
             windView.widthAnchor.constraint(equalToConstant: 60),
-            
+            minTempLabel.widthAnchor.constraint(equalToConstant: 60),
         ])
     }
     
@@ -87,6 +90,11 @@ class PWDayForecastCell: UITableViewCell {
         
         windView.set(weather: weather)
         conditionView.set(weather: weather)
+        
+        let formatter2 = MeasurementFormatter()
+        formatter2.unitStyle = .short
+        formatter2.numberFormatter.maximumFractionDigits = 0
+        minTempLabel.text = formatter2.string(from: weather.lowTemperature)
     }
 
 }

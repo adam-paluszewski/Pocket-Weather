@@ -62,4 +62,38 @@ struct UIHelper {
         
         gradientLayer.colors = [UIColor(red: 46/255, green: 104/255, blue: 161/255, alpha: 1).cgColor, UIColor(red: 138/255, green: 150/255, blue: 162/255, alpha: 1).cgColor]
     }
+    
+    
+    static func getWeatherImage(for symbol: String?) -> UIImage {
+        var symbolName: String!
+        var config = UIImage.SymbolConfiguration.preferringMulticolor()
+        
+        switch symbol {
+            case "sun.max":
+                symbolName = "sun.max.fill"
+            case "cloud.sun":
+                symbolName = "cloud.sun.fill"
+            case "cloud":
+                symbolName = "cloud.fill"
+            case "cloud.drizzle":
+                symbolName = "cloud.drizzle.fill"
+            case "cloud.rain":
+                symbolName = "cloud.rain.fill"
+            case "cloud.moon":
+                symbolName = "cloud.moon.fill"
+                config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.label, .systemYellow, .tertiaryLabel]))
+            case "cloud.moon.rain":
+                symbolName = "cloud.moon.rain.fill"
+                config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.label, .systemYellow, .tertiaryLabel]))
+            case "moon.stars":
+                symbolName = "moon.stars.fill"
+                config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.systemYellow, .secondaryLabel]))
+            case "wind":
+                symbolName = "wind"
+            default:
+                symbolName = "square.fill"
+                config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.secondaryLabel]))
+        }
+        return UIImage(systemName: symbolName, withConfiguration: config)!
+    }
 }

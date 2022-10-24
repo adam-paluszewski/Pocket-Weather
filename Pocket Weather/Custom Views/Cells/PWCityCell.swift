@@ -12,7 +12,7 @@ class PWCityCell: UITableViewCell {
     
     static let cellId = "PWCityCell"
     
-    @UsesAutoLayout var containerView = UIView()
+    @UsesAutoLayout var containerView = UIImageView()
     @UsesAutoLayout var blackFilterView = UIView()
     @UsesAutoLayout var weatherIconImageView = UIImageView()
     @UsesAutoLayout var cityLabel = PWBodyLabel(textAlignment: .left)
@@ -23,7 +23,7 @@ class PWCityCell: UITableViewCell {
     @UsesAutoLayout var weatherDescLabel = PWBodyLabel(textAlignment: .left)
     @UsesAutoLayout var stackView = UIStackView()
     
-    var weatherAssets: WeatherAssets?
+    var weatherAssets: CurrentWeatherAssets?
     
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -40,12 +40,13 @@ class PWCityCell: UITableViewCell {
     func configure() {
         backgroundColor = .clear
         
-        blackFilterView.layer.cornerRadius = 20
+        blackFilterView.layer.cornerRadius = 16
         blackFilterView.backgroundColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.25)
         
-        containerView.layer.cornerRadius = 20
+        containerView.layer.cornerRadius = 16
         containerView.clipsToBounds = true
         containerView.backgroundColor = UIColor(red: 108/255, green: 127/255, blue: 142/255, alpha: 1)
+        containerView.contentMode = .scaleAspectFill
         
         let config = UIImage.SymbolConfiguration(paletteColors: [.secondaryLabel])
         let weatherIconImage = UIImage(systemName: "square.fill", withConfiguration: config)
@@ -75,7 +76,7 @@ class PWCityCell: UITableViewCell {
         cityLabel.text = location.city
         guard let weather = location.weather else { return }
 
-        weatherAssets = WeatherAssets(symbol: weather.currentWeather.symbolName, condition: weather.currentWeather.condition.description)
+        weatherAssets = CurrentWeatherAssets(weather: weather)
         
         
         let formatter = MeasurementFormatter()
@@ -89,10 +90,18 @@ class PWCityCell: UITableViewCell {
         
         weatherIconImageView.image = weatherAssets?.weatherConditionSymbol
         
-        containerView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height - 10)
+        containerView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
         containerView.backgroundColor = .clear
-        let videoBackgroundManager = VideoBackgroundManager()
-        videoBackgroundManager.addPlayerLayer(in: containerView, with: weatherAssets!.dynamicVerticalBgName)
+        
+        containerView.image = weatherAssets?.horizontalBgImage
+        
+//        let videoBackgroundManager = VideoBackgroundManager()
+//
+//        DispatchQueue.global(qos: .userInteractive).async {
+//            videoBackgroundManager.addPlayerLayer(in: self.containerView, with: self.weatherAssets!.horizontalBgName)
+//        }
+//        videoBackgroundManager.addPlayerLayer(in: self.containerView, with: self.weatherAssets!.horizontalBgName)
+        
         
         if let precipitation = location.weather?.hourlyForecast.forecast[0].precipitationChance {
             let precipitationChance = precipitation * 100
