@@ -33,16 +33,13 @@ class PWDayForecastVC: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-//        preferredContentSize.height = tableView.contentSize.height
     }
     
 
     func configureViewController() {
         view.clipsToBounds = true
         view.backgroundColor = UIColor(red: 71/255, green: 139/255, blue: 174/255, alpha: 0.65)
-//        view.backgroundColor = UIHelper.getImagesAndColors(for: weatherSymbol).sectionColor
         view.layer.cornerRadius = 16
-        
         layoutUI()
     }
     
@@ -75,13 +72,11 @@ class PWDayForecastVC: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
     }
-   
 }
 
+
 extension PWDayForecastVC: UITableViewDataSource, UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         forecast.count
     }
@@ -99,8 +94,6 @@ extension PWDayForecastVC: UITableViewDataSource, UITableViewDelegate {
 
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return !forecast.isEmpty ? headerView : nil
+        !forecast.isEmpty ? headerView : nil
     }
-
-
 }

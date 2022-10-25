@@ -10,7 +10,6 @@ import CoreLocation
 import MapKit
 
 
-
 protocol SearchResultsDelegate {
     func locationWasTapped(location: LocationData)
 }
@@ -39,14 +38,7 @@ class SearchResultsVC: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let gradient = CAGradientLayer()
-        gradient.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
-        gradient.colors = [UIColor(red: 53/255, green: 92/255, blue: 125/255, alpha: 1).cgColor,
-                           UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1).cgColor]
-        gradient.startPoint = CGPoint(x: 0, y: 0)
-        gradient.endPoint = CGPoint(x: 1, y: 1)
-
-        containerView.layer.insertSublayer(gradient, at: 0)
+        UIHelper.createAxialGradient(in: containerView, startPoint: CGPoint(x: 0, y: 0), endPoint: CGPoint(x: 1, y: 1), colors: [UIColor(red: 53/255, green: 92/255, blue: 125/255, alpha: 1).cgColor, UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1).cgColor])
     }
     
     
@@ -88,7 +80,6 @@ class SearchResultsVC: UIViewController {
 
 
 extension SearchResultsVC: UITableViewDataSource, UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return results.count
     }
@@ -125,7 +116,7 @@ extension SearchResultsVC: UITableViewDataSource, UITableViewDelegate {
                             self.dismiss(animated: true)
                         }
                     case .failure(let error):
-                        print(error)
+                        self.presentAlertOnMainThread(title: Localization.error, message: "", buttonTitle: Localization.ok, buttonColor: .systemRed, buttonSystemImage: .checkmark)
                 }
             }
         }

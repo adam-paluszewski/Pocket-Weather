@@ -8,11 +8,11 @@
 import UIKit
 import WeatherKit
 
+
 class PWConditionView: UIView {
 
     @UsesAutoLayout var conditionIconImageView = UIImageView()
     @UsesAutoLayout var maxTemperatureLabel = PWBodyLabel(textAlignment: .center)
-    @UsesAutoLayout var minTemperatureLabel = PWCaptionLabel(textAlignment: .center)
     
     var weatherAssets: CurrentWeatherAssets!
     
@@ -29,12 +29,9 @@ class PWConditionView: UIView {
     
     
     func configure() {
-        conditionIconImageView.tintColor = .label
+//        conditionIconImageView.tintColor = .label
         conditionIconImageView.contentMode = .scaleAspectFit
         conditionIconImageView.addShadow()
-        
-        minTemperatureLabel.textColor = .secondaryLabel
-
         addSubviews()
     }
 
@@ -42,29 +39,48 @@ class PWConditionView: UIView {
     func addSubviews() {
         addSubview(conditionIconImageView)
         addSubview(maxTemperatureLabel)
-        addSubview(minTemperatureLabel)
         
         NSLayoutConstraint.activate([
             conditionIconImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             conditionIconImageView.widthAnchor.constraint(equalToConstant: 30),
             conditionIconImageView.heightAnchor.constraint(equalToConstant: 30),
+            
+            maxTemperatureLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            maxTemperatureLabel.leadingAnchor.constraint(equalTo: conditionIconImageView.trailingAnchor, constant: 4),
+            maxTemperatureLabel.widthAnchor.constraint(equalToConstant: 30),
         ])
     }
     
     
     func set(weather: HourWeather) {
-        
+
         let weatherImage = UIHelper.getWeatherImage(for: weather.symbolName)
         conditionIconImageView.image = weatherImage
-        
+
         let formatter2 = MeasurementFormatter()
         formatter2.unitStyle = .short
         formatter2.numberFormatter.maximumFractionDigits = 0
-        
-        
+
         maxTemperatureLabel.text = formatter2.string(from: weather.temperature)
-        
-        minTemperatureLabel.textColor = .clear
+
+        NSLayoutConstraint.activate([
+            maxTemperatureLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            maxTemperatureLabel.leadingAnchor.constraint(equalTo: conditionIconImageView.trailingAnchor, constant: 4),
+            maxTemperatureLabel.widthAnchor.constraint(equalToConstant: 30),
+        ])
+    }
+
+
+    func set(weather: DayWeather) {
+        let weatherImage = UIHelper.getWeatherImage(for: weather.symbolName)
+        conditionIconImageView.image = weatherImage
+
+        let formatter2 = MeasurementFormatter()
+        formatter2.unitStyle = .short
+        formatter2.numberFormatter.maximumFractionDigits = 0
+
+        maxTemperatureLabel.text = formatter2.string(from: weather.highTemperature)
+
         NSLayoutConstraint.activate([
             maxTemperatureLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             maxTemperatureLabel.leadingAnchor.constraint(equalTo: conditionIconImageView.trailingAnchor, constant: 4),
@@ -73,39 +89,16 @@ class PWConditionView: UIView {
     }
     
     
-    func set(weather: DayWeather) {
-//        let weatherImage = UIHelper.getWeatherImage(for: weather.symbolName)
-//        conditionIconImageView.image = weatherImage
-//
-//
-//        let formatter2 = MeasurementFormatter()
-//        formatter2.unitStyle = .short
-//        formatter2.numberFormatter.maximumFractionDigits = 0
-//
-//
-//        maxTemperatureLabel.text = formatter2.string(from: weather.highTemperature)
-//        minTemperatureLabel.text = formatter2.string(from: weather.lowTemperature)
-//
-//        NSLayoutConstraint.activate([
-//            maxTemperatureLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -9),
-//            maxTemperatureLabel.leadingAnchor.constraint(equalTo: conditionIconImageView.trailingAnchor, constant: 4),
-//            maxTemperatureLabel.widthAnchor.constraint(equalToConstant: 30),
-//
-//            minTemperatureLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 9),
-//            minTemperatureLabel.centerXAnchor.constraint(equalTo: maxTemperatureLabel.centerXAnchor, constant: -1)
-//        ])
-        
-        let weatherImage = UIHelper.getWeatherImage(for: weather.symbolName)
+    func set(weather: CurrentWeather?) {
+        let weatherImage = UIHelper.getWeatherImage(for: weather?.symbolName)
         conditionIconImageView.image = weatherImage
-        
+
         let formatter2 = MeasurementFormatter()
         formatter2.unitStyle = .short
         formatter2.numberFormatter.maximumFractionDigits = 0
-        
-        
-        maxTemperatureLabel.text = formatter2.string(from: weather.highTemperature)
-        
-        minTemperatureLabel.textColor = .clear
+
+        maxTemperatureLabel.text = formatter2.string(from: weather!.temperature)
+
         NSLayoutConstraint.activate([
             maxTemperatureLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             maxTemperatureLabel.leadingAnchor.constraint(equalTo: conditionIconImageView.trailingAnchor, constant: 4),

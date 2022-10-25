@@ -24,19 +24,7 @@ class PWHourForecastVC: UIViewController {
         }
     }
 
-//    init(forecast: Weather) {
-//        super.init(nibName: nil, bundle: nil)
-//        let date = Date()
-//        self.forecast = forecast.hourlyForecast.forecast.filter{$0.date >= date}
-//        self.weatherSymbol = forecast.currentWeather.symbolName
-//    }
-//
-//
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewController()
@@ -47,11 +35,8 @@ class PWHourForecastVC: UIViewController {
 
     func configureViewController() {
         view.clipsToBounds = true
-//        view.backgroundColor = UIColor(red: 71/255, green: 139/255, blue: 174/255, alpha: 0.65)
-//        view.backgroundColor = UIHelper.getImagesAndColors(for: weatherSymbol).sectionColor
         view.layer.cornerRadius = 16
         headerView.segmentedControl.addTarget(self, action: #selector(hoursSegmentedControlValueChanged), for: .valueChanged)
-        
         layoutUI()
     }
     
@@ -90,8 +75,8 @@ class PWHourForecastVC: UIViewController {
    
 }
 
+
 extension PWHourForecastVC: UITableViewDataSource, UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var numberOfRows: Int!
         switch headerView.segmentedControl.selectedSegmentIndex {
@@ -107,6 +92,7 @@ extension PWHourForecastVC: UITableViewDataSource, UITableViewDelegate {
         return min(numberOfRows, forecast.count)
     }
     
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: PWHourForecastCell.cellid, for: indexPath) as! PWHourForecastCell
         cell.set(weather: forecast[indexPath.row])
@@ -120,7 +106,6 @@ extension PWHourForecastVC: UITableViewDataSource, UITableViewDelegate {
 
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return !forecast.isEmpty ?  headerView : nil
+        !forecast.isEmpty ?  headerView : nil
     }
-
 }

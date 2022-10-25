@@ -22,30 +22,6 @@ struct UIHelper {
     }
     
     
-    static func returnPlayerLayer(filename: String, in view: UIView) -> AVPlayerLayer {
-        var player: AVPlayer?
-        let videoURL = Bundle.main.url(forResource: filename, withExtension: "mp4")!
-        
-        player = AVPlayer(url: videoURL as URL)
-        player?.actionAtItemEnd = .none
-        player?.isMuted = true
-
-        let playerLayer = AVPlayerLayer(player: player)
-        playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        playerLayer.zPosition = -1
-
-        playerLayer.frame = view.frame
-        player?.play()
-        
-        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: nil) { _ in
-                player?.seek(to: CMTime.zero)
-                player?.play()
-            }
-
-        return playerLayer
-    }
-    
-    
     static func addGradientAnimation(in view: UIView) {
         let gradientLayer = CAGradientLayer()
         gradientLayer.startPoint = CGPoint(x: 0, y: 0)
@@ -90,6 +66,14 @@ struct UIHelper {
                 config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.systemYellow, .secondaryLabel]))
             case "wind":
                 symbolName = "wind"
+            case "snow":
+                symbolName = "snow"
+            case "moon.haze":
+                symbolName = "moon.haze.fill"
+                config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.label, .systemYellow, .tertiaryLabel]))
+            case "sun.haze":
+                symbolName = "sun.haze.fill"
+                config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.label, .systemYellow, .tertiaryLabel]))
             default:
                 symbolName = "square.fill"
                 config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.secondaryLabel]))

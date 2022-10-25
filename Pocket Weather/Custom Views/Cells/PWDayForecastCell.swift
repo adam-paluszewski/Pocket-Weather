@@ -17,7 +17,7 @@ class PWDayForecastCell: UITableViewCell {
     @UsesAutoLayout var minTempLabel = PWBodyLabel(textAlignment: .center)
 
     @UsesAutoLayout var conditionView = PWConditionView()
-    @UsesAutoLayout var precipitationLabel = PWCaptionLabel(textAlignment: .center)
+    @UsesAutoLayout var precipitationLabel = PWBodyLabel(textAlignment: .center)
     @UsesAutoLayout var windView = PWWindView()
     
     
@@ -42,6 +42,7 @@ class PWDayForecastCell: UITableViewCell {
         stackView.distribution = .equalSpacing
         
         precipitationLabel.textColor = .label
+        precipitationLabel.font = .systemFont(ofSize: 16, weight: .light)
         
         minTempLabel.font = .systemFont(ofSize: 16, weight: .light)
     }

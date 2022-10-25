@@ -94,15 +94,7 @@ class PWCityCell: UITableViewCell {
         containerView.backgroundColor = .clear
         
         containerView.image = weatherAssets?.horizontalBgImage
-        
-//        let videoBackgroundManager = VideoBackgroundManager()
-//
-//        DispatchQueue.global(qos: .userInteractive).async {
-//            videoBackgroundManager.addPlayerLayer(in: self.containerView, with: self.weatherAssets!.horizontalBgName)
-//        }
-//        videoBackgroundManager.addPlayerLayer(in: self.containerView, with: self.weatherAssets!.horizontalBgName)
-        
-        
+
         if let precipitation = location.weather?.hourlyForecast.forecast[0].precipitationChance {
             let precipitationChance = precipitation * 100
             let precipitationChanceFormatted = String(format: "%.0f", precipitationChance)
@@ -159,12 +151,14 @@ class PWCityCell: UITableViewCell {
             weatherIconImageView.heightAnchor.constraint(equalToConstant: 50),
             weatherIconImageView.widthAnchor.constraint(equalToConstant: 50),
             
-            cityLabel.topAnchor.constraint(equalTo: weatherIconImageView.topAnchor),
-            cityLabel.leadingAnchor.constraint(equalTo: weatherIconImageView.trailingAnchor, constant: 15),
-
             temperatureLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: padding),
             temperatureLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -padding),
+            temperatureLabel.widthAnchor.constraint(equalToConstant: 60),
             
+            cityLabel.topAnchor.constraint(equalTo: weatherIconImageView.topAnchor),
+            cityLabel.leadingAnchor.constraint(equalTo: weatherIconImageView.trailingAnchor, constant: 15),
+            cityLabel.trailingAnchor.constraint(equalTo: temperatureLabel.leadingAnchor, constant: -20),
+
             weatherDescLabel.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 2),
             weatherDescLabel.leadingAnchor.constraint(equalTo: cityLabel.leadingAnchor),
             

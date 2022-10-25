@@ -10,6 +10,8 @@
 		E9B34AE42906A1D800779C92 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B34AE32906A1D800779C92 /* SearchResult.swift */; };
 		E9B34AF62906FC9B00779C92 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9B34AF82906FC9B00779C92 /* Localizable.strings */; };
 		E9B34AFB2906FF0D00779C92 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B34AFA2906FF0D00779C92 /* Localization.swift */; };
+		E9B34AFD2907F77100779C92 /* CitiesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B34AFC2907F77100779C92 /* CitiesList.swift */; };
+		E9B34AFF29083B6600779C92 /* moon-haze-vd.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E9B34AFE29083B6500779C92 /* moon-haze-vd.mp4 */; };
 		E9B5163228F02E410025590F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5163128F02E410025590F /* AppDelegate.swift */; };
 		E9B5163428F02E410025590F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5163328F02E410025590F /* SceneDelegate.swift */; };
 		E9B5163628F02E410025590F /* WeatherVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5163528F02E410025590F /* WeatherVC.swift */; };
@@ -32,7 +34,6 @@
 		E9B5167128F6C5880025590F /* PWWindView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5167028F6C5880025590F /* PWWindView.swift */; };
 		E9B5167328F6C76D0025590F /* PWConditionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5167228F6C76D0025590F /* PWConditionView.swift */; };
 		E9B5167528F6E6EC0025590F /* PWDayForecastVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5167428F6E6EC0025590F /* PWDayForecastVC.swift */; };
-		E9B5167728F6E92D0025590F /* SunVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5167628F6E92D0025590F /* SunVC.swift */; };
 		E9B5167928F6EADB0025590F /* PWDayForecastHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5167828F6EADB0025590F /* PWDayForecastHeaderView.swift */; };
 		E9B5167B28F6EB8A0025590F /* PWDayForecastCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5167A28F6EB8A0025590F /* PWDayForecastCell.swift */; };
 		E9B5167D28F6FAEC0025590F /* UITableViewExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5167C28F6FAEB0025590F /* UITableViewExt.swift */; };
@@ -73,6 +74,8 @@
 		E9B34AF72906FC9B00779C92 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9B34AF92906FCB100779C92 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9B34AFA2906FF0D00779C92 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
+		E9B34AFC2907F77100779C92 /* CitiesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitiesList.swift; sourceTree = "<group>"; };
+		E9B34AFE29083B6500779C92 /* moon-haze-vd.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "moon-haze-vd.mp4"; sourceTree = "<group>"; };
 		E9B5162E28F02E410025590F /* Pocket Weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pocket Weather.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9B5163128F02E410025590F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E9B5163328F02E410025590F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -98,7 +101,6 @@
 		E9B5167028F6C5880025590F /* PWWindView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PWWindView.swift; sourceTree = "<group>"; };
 		E9B5167228F6C76D0025590F /* PWConditionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PWConditionView.swift; sourceTree = "<group>"; };
 		E9B5167428F6E6EC0025590F /* PWDayForecastVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PWDayForecastVC.swift; sourceTree = "<group>"; };
-		E9B5167628F6E92D0025590F /* SunVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SunVC.swift; sourceTree = "<group>"; };
 		E9B5167828F6EADB0025590F /* PWDayForecastHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PWDayForecastHeaderView.swift; sourceTree = "<group>"; };
 		E9B5167A28F6EB8A0025590F /* PWDayForecastCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PWDayForecastCell.swift; sourceTree = "<group>"; };
 		E9B5167C28F6FAEB0025590F /* UITableViewExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewExt.swift; sourceTree = "<group>"; };
@@ -247,6 +249,7 @@
 				E9B6A71C28FD759C00080EC9 /* Constants.swift */,
 				E9B6A71E28FD84C600080EC9 /* UIHelper.swift */,
 				E9B34AFA2906FF0D00779C92 /* Localization.swift */,
+				E9B34AFC2907F77100779C92 /* CitiesList.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -307,7 +310,6 @@
 			children = (
 				E9B5165828F312C30025590F /* PWHourForecastVC.swift */,
 				E9B5167428F6E6EC0025590F /* PWDayForecastVC.swift */,
-				E9B5167628F6E92D0025590F /* SunVC.swift */,
 				E9B6A71728F9964400080EC9 /* PWAlertVC.swift */,
 			);
 			path = ViewControllers;
@@ -335,6 +337,7 @@
 				E9B6A7442900446B00080EC9 /* partly-cloudy-vd.mp4 */,
 				E9B6A74C290052FF00080EC9 /* mostly-clear-vd.mp4 */,
 				E9B6A74A2900526800080EC9 /* clear-vd.mp4 */,
+				E9B34AFE29083B6500779C92 /* moon-haze-vd.mp4 */,
 				E9B6A7602902EFF200080EC9 /* moon-stars-vd.mp4 */,
 				E9B6A75C29015BD700080EC9 /* wind-vd.mp4 */,
 				E9B6A758290153ED00080EC9 /* cloud-vd.mp4 */,
@@ -411,6 +414,7 @@
 				E9B6A759290153ED00080EC9 /* cloud-vd.mp4 in Resources */,
 				E9B34AF62906FC9B00779C92 /* Localizable.strings in Resources */,
 				E9B6A74D290052FF00080EC9 /* mostly-clear-vd.mp4 in Resources */,
+				E9B34AFF29083B6600779C92 /* moon-haze-vd.mp4 in Resources */,
 				E9B6A74F290054BD00080EC9 /* cloud-moon-vd.mp4 in Resources */,
 				E9B6A75D29015BD800080EC9 /* wind-vd.mp4 in Resources */,
 				E9B6A7452900446B00080EC9 /* partly-cloudy-vd.mp4 in Resources */,
@@ -435,7 +439,6 @@
 				E9B5164B28F2E8330025590F /* WeatherManager.swift in Sources */,
 				E9B5167D28F6FAEC0025590F /* UITableViewExt.swift in Sources */,
 				E9B6A71828F9964400080EC9 /* PWAlertVC.swift in Sources */,
-				E9B5167728F6E92D0025590F /* SunVC.swift in Sources */,
 				E9B6A75F2902E08E00080EC9 /* PWMiniConditionView.swift in Sources */,
 				E9B5165928F312C30025590F /* PWHourForecastVC.swift in Sources */,
 				E9B5165B28F4325D0025590F /* AutoLayoutWrapper.swift in Sources */,
@@ -448,6 +451,7 @@
 				E9B5163228F02E410025590F /* AppDelegate.swift in Sources */,
 				E9B6A72128FDB08900080EC9 /* UIViewExt.swift in Sources */,
 				E9B6A72328FEC01300080EC9 /* PWNavBarTitleView.swift in Sources */,
+				E9B34AFD2907F77100779C92 /* CitiesList.swift in Sources */,
 				E9B5167528F6E6EC0025590F /* PWDayForecastVC.swift in Sources */,
 				E9B6A73A29001AE300080EC9 /* CurrentWeatherAssets.swift in Sources */,
 				E9B5165D28F443190025590F /* UIViewControllerExt.swift in Sources */,

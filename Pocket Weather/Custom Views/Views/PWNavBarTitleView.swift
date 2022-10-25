@@ -10,11 +10,9 @@ import UIKit
 class PWNavBarTitleView: UIView {
 
     @UsesAutoLayout var stackView = UIStackView()
-    @UsesAutoLayout var conditionIconImageView = UIImageView()
-    @UsesAutoLayout var temperatureLabel = PWBodyLabel(textAlignment: .center)
+    @UsesAutoLayout var conditionView = PWConditionView()
     @UsesAutoLayout var cityLabel = PWBodyLabel(textAlignment: .center)
     
-    var weatherAssets: CurrentWeatherAssets!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,17 +23,9 @@ class PWNavBarTitleView: UIView {
     init(location: LocationData) {
         super.init(frame: .zero)
         
-        weatherAssets = CurrentWeatherAssets(weather: location.weather!)
-        conditionIconImageView.image = weatherAssets.weatherConditionSymbol
-        conditionIconImageView.contentMode = .scaleAspectFit
+        cityLabel.text = location.city + "   "
         
-        let formatter = MeasurementFormatter()
-        formatter.unitStyle = .short
-        formatter.numberFormatter.maximumFractionDigits = 0
-        let tempString = formatter.string(from: (location.weather?.currentWeather.temperature)!)
-        temperatureLabel.text = tempString
-        
-        cityLabel.text = location.city + "    | "
+        conditionView.set(weather: location.weather?.currentWeather)
         
         configure()
     }
@@ -48,7 +38,7 @@ class PWNavBarTitleView: UIView {
     
     func configure() {
         stackView.axis = .horizontal
-        stackView.distribution = .fillProportionally
+//        stackView.distribution = .fillProportionally
 
         addSubviews()
     }
@@ -57,14 +47,16 @@ class PWNavBarTitleView: UIView {
     func addSubviews() {
         addSubview(stackView)
         stackView.addArrangedSubview(cityLabel)
-        stackView.addArrangedSubview(conditionIconImageView)
-        stackView.addArrangedSubview(temperatureLabel)
+        stackView.addArrangedSubview(conditionView)
+        
         
         NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            stackView.widthAnchor.constraint(equalToConstant: 200),
-            stackView.heightAnchor.constraint(equalToConstant: 30)
+            stackView.heightAnchor.constraint(equalToConstant: 30),
+            
+            conditionView.widthAnchor.constraint(equalToConstant: 60)
         ])
     }
 

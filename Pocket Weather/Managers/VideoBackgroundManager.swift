@@ -44,7 +44,7 @@ class VideoBackgroundManager {
         let animation = CABasicAnimation(keyPath: "opacity")
         animation.fromValue = 0
         animation.toValue = 1
-        animation.duration = 1
+        animation.duration = Constants.animationDuration
         playerLayer?.add(animation, forKey: nil)
         
         playerLayer?.opacity = 1

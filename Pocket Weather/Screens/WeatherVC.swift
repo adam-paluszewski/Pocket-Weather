@@ -41,8 +41,13 @@ class WeatherVC: UIViewController {
         
         switch type {
             case .otherLocation:
-                let rightButton = UIBarButtonItem(title: "OK", style: .plain, target: self, action: #selector(barButtonTapped))
+                let rightButton = UIBarButtonItem(title: Localization.ok, style: .plain, target: self, action: #selector(barButtonTapped))
                 navigationItem.rightBarButtonItem = rightButton
+                
+                print(location?.weather?.dailyForecast.forecast[2].symbolName.description)
+                print(location?.weather?.dailyForecast.forecast[7].symbolName)
+                print(location?.weather?.currentWeather.symbolName)
+                print(location?.weather?.currentWeather.condition.description)
             case .searchResult:
                 let leftButton = UIBarButtonItem(title: Localization.cancel, style: .plain, target: self, action: #selector(barButtonTapped))
                 navigationItem.leftBarButtonItem = leftButton
@@ -106,12 +111,11 @@ class WeatherVC: UIViewController {
     
     @objc func barButtonTapped(_ sender: UIBarButtonItem) {
         switch sender.title {
-            case "OK", "Cancel":
+            case Localization.ok, Localization.cancel:
                 dismiss(animated: true)
-            case "Add":
+            case Localization.add:
                 let name = Notification.Name("addToSavedLocationsList")
                 NotificationCenter.default.post(name: name, object: location)
-                self.location.weather = nil
                 dismiss(animated: true)
             default:
                 print()
@@ -128,10 +132,11 @@ class WeatherVC: UIViewController {
                 case .success(let weather):
                     self.location.weather = weather
                     self.updateUI()
-                    weather.currentWeather.condition.description
                     print("🟡 symbol \(self.location.weather!.currentWeather.symbolName) and condition: \(self.location.weather!.currentWeather.condition.description), clouds:  \(self.location.weather!.currentWeather.cloudCover.description)")
                 case .failure(let error):
                     self.presentAlertOnMainThread(title: Localization.error, message: Localization.couldntGetWeather, buttonTitle: "OK", buttonColor: .systemRed, buttonSystemImage: .checkmark)
+                    self.headerView.fetchingWeatherLabel.text = Localization.couldntGetWeather
+                    self.dismissLoadingView(in: self.view)
             }
         }
     }
@@ -164,7 +169,7 @@ class WeatherVC: UIViewController {
         DispatchQueue.main.async {
             self.weatherAssets = CurrentWeatherAssets(weather: self.location.weather)
             self.headerView.set(for: self.location)
-            UIView.animate(withDuration: 2) {
+            UIView.animate(withDuration: Constants.animationDuration) {
                 self.hourlyForecastVC.view.backgroundColor = self.weatherAssets.sectionColor
                 self.dailyForecastVC.view.backgroundColor = self.weatherAssets.sectionColor
             }
@@ -245,9 +250,7 @@ extension WeatherVC: CLLocationManagerDelegate {
         
         let lat = locations[0].coordinate.latitude
         let lon = locations[0].coordinate.longitude
-        
         location = LocationData(lat: lat, lon: lon)
-        
         let coordinates = location.coordinates
         
         coordinates.fetchCityAndCountry(location: location.coordinates) { city, country, error in
@@ -259,8 +262,6 @@ extension WeatherVC: CLLocationManagerDelegate {
             }
         }
         fetchWeather(for: coordinates)
-        
-        
     }
 }
 

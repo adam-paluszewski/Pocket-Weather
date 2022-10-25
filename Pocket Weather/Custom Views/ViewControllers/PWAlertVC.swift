@@ -50,28 +50,23 @@ class PWAlertVC: UIViewController {
     func configureViewController() {
         view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.75)
         
-        //containerView
         view.addSubview(containerView)
         containerView.backgroundColor = .systemBackground
         containerView.layer.borderWidth = 2
         containerView.layer.borderColor = UIColor.secondaryLabel.cgColor
         containerView.layer.cornerRadius = 10
         
-        //titleLabel
         containerView.addSubview(titleLabel)
         titleLabel.text = alertTitle ?? "Something went wrong"
         
-        //messageLabel
         containerView.addSubview(messageLabel)
         messageLabel.text = message ?? "Unable to complete request"
         messageLabel.numberOfLines = 4
         
-        //actionButton
         containerView.addSubview(actionButton)
         actionButton.setTitle(buttonTitle ?? "OK", for: .normal)
         actionButton.addTarget(self, action: #selector(dismissVC), for: .touchUpInside)
         
-        //constraints
         NSLayoutConstraint.activate([
             containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             containerView.heightAnchor.constraint(equalToConstant: 220),
@@ -94,5 +89,4 @@ class PWAlertVC: UIViewController {
             messageLabel.bottomAnchor.constraint(equalTo: actionButton.topAnchor, constant: -20)
         ])
     }
-
 }

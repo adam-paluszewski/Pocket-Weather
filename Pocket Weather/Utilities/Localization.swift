@@ -13,6 +13,7 @@ struct Localization {
     static let mostlyCloudy = NSLocalizedString("Mostly Cloudy", comment: "")
     static let cloudy = NSLocalizedString("Cloudy", comment: "")
     
+    static let ok = NSLocalizedString("OK", comment: "")
     static let cancel = NSLocalizedString("Cancel", comment: "")
     static let add = NSLocalizedString("Add", comment: "")
     static let delete = NSLocalizedString("Delete", comment: "")

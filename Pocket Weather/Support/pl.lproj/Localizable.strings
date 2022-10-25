@@ -11,10 +11,11 @@
 "Search for locations" = "Szukaj miasta";
 
 "Clear" = "Pogodnie";
-"Mostly Clear" = "Mostly Clear";
+"Mostly Clear" = "Głównie bez chmur";
 "Mostly Cloudy" = "Głównie chmury";
 "Cloudy" = "Pochmurnie";
 
+"OK" = "OK";
 "Cancel" = "Anuluj";
 "Add" = "Dodaj";
 "Delete" = "Usuń";

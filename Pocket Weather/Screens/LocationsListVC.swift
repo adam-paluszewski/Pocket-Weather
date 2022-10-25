@@ -20,6 +20,7 @@ class LocationsListVC: UIViewController {
     var locationsData: [LocationData] = []
     var searchCompleter = MKLocalSearchCompleter()
     
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -27,38 +28,11 @@ class LocationsListVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.hidesSearchBarWhenScrolling = false
         configureViewController()
         configureSearchController()
         configureTableView()
         addObservers()
-        
-        PersistenceManager.shared.retrieveLocations { result in
-            switch result {
-                case .success(let locations):
-                    self.locationsData = locations
-                    tableView.reloadDataOnMainThread()
-                    for locationData in locationsData.enumerated() {
-                        WeatherManager.shared.fetchWeather(for: locationData.element.coordinates) { result in
-                            switch result {
-                                case .success(let weather):
-                                    self.locationsData[locationData.offset].weather = weather
-                                    
-                                    DispatchQueue.main.async {
-                                        self.tableView.reloadRows(at: [IndexPath(row: locationData.offset, section: 0)], with: .fade)
-                                    }
-                                    
-                                case .failure(let error):
-                                    print()
-                            }
-                        }
-                    }
-                    
-
-                case .failure(let error):
-                    print(error)
-            }
-        }
+        getLocationsList()
     }
     
     
@@ -88,27 +62,13 @@ class LocationsListVC: UIViewController {
       
 
     func configureViewController() {
+        navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.title = Localization.locations
         navigationController?.navigationBar.prefersLargeTitles = true
         layoutUI()
-
-        
-        let gradient = CAGradientLayer()
-        gradient.frame = view.frame
-        gradient.colors = [UIColor(red: 29/255, green: 75/255, blue: 110/255, alpha: 1).cgColor, UIColor(red: 78/255, green: 85/255, blue: 91/255, alpha: 1).cgColor]
-        gradient.startPoint = CGPoint(x: 0, y: 0)
-        gradient.endPoint = CGPoint(x: 1, y: 1)
-
-        view.layer.insertSublayer(gradient, at: 0)
-
     }
     
-    
-    
-//    UIColor(red: 53/255, green: 92/255, blue: 125/255, alpha: 1).cgColor,
-//                       UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1).cgColor
 
-    
     func configureSearchController() {
         searchController.searchBar.placeholder = Localization.searchLocations
         navigationItem.searchController = searchController
@@ -145,7 +105,9 @@ class LocationsListVC: UIViewController {
             if locationsData.contains{$0.city == location.city} {
                 presentAlertOnMainThread(title: Localization.error, message: Localization.cityAlreadyOnList, buttonTitle: "OK", buttonColor: .red, buttonSystemImage: .checkmark)
             } else {
-                PersistenceManager.shared.updateWith(location: location, actionType: .add) { error in
+                var locationWithoutWeather = location
+                locationWithoutWeather.weather = nil
+                PersistenceManager.shared.updateWith(location: locationWithoutWeather, actionType: .add) { error in
                     locationsData.append(location)
                     tableView.reloadDataOnMainThread()
                 }
@@ -154,7 +116,35 @@ class LocationsListVC: UIViewController {
     }
     
     
+    func getLocationsList() {
+        PersistenceManager.shared.retrieveLocations { result in
+            switch result {
+                case .success(let locations):
+                    self.locationsData = locations
+                    tableView.reloadDataOnMainThread()
+                    for locationData in locationsData.enumerated() {
+                        WeatherManager.shared.fetchWeather(for: locationData.element.coordinates) { result in
+                            switch result {
+                                case .success(let weather):
+                                    self.locationsData[locationData.offset].weather = weather
+                                    DispatchQueue.main.async {
+                                        self.tableView.reloadRows(at: [IndexPath(row: locationData.offset, section: 0)], with: .fade)
+                                    }
+                                case .failure(let error):
+                                    print()
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    print(error)
+            }
+        }
+    }
+    
+    
     func layoutUI() {
+        UIHelper.createAxialGradient(in: view, startPoint: CGPoint(x: 0, y: 0), endPoint: CGPoint(x: 1, y: 1), colors: [UIColor(red: 29/255, green: 75/255, blue: 110/255, alpha: 1).cgColor, UIColor(red: 78/255, green: 85/255, blue: 91/255, alpha: 1).cgColor])
+        
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
@@ -168,7 +158,6 @@ class LocationsListVC: UIViewController {
 
 
 extension LocationsListVC: UISearchResultsUpdating, UISearchBarDelegate {
-    
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else { return }
         searchCompleter.queryFragment = text
@@ -188,7 +177,6 @@ extension LocationsListVC: UISearchResultsUpdating, UISearchBarDelegate {
 
 
 extension LocationsListVC: UITableViewDataSource, UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         locationsData.count
     }
@@ -247,7 +235,6 @@ extension LocationsListVC: UITableViewDataSource, UITableViewDelegate {
 
 extension LocationsListVC: SearchResultsDelegate {
     func locationWasTapped(location: LocationData) {
-
         DispatchQueue.main.async {
             self.searchController.searchBar.text = ""
             self.searchResultsVC.results = []
@@ -264,55 +251,8 @@ extension LocationsListVC: SearchResultsDelegate {
 extension LocationsListVC: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         completer.resultTypes = .address
-        let citiesList = getCityList(results: completer.results)
+        let citiesList = CitiesList.getCityList(results: completer.results)
         searchResultsVC.results = Array(Set(citiesList))
-    }
-    
-    
-    func getCityList(results: [MKLocalSearchCompletion]) -> [SearchResult]{
-        
-        var searchResults: [SearchResult] = []
-        
-        for result in results {
-            let titleComponents = result.title.components(separatedBy: ", ")
-            let subtitleComponents = result.subtitle.components(separatedBy: ", ")
-            
-            buildCityTypeA(titleComponents, subtitleComponents){place in
-                if place.city != "" && place.country != ""{
-                    searchResults.append(SearchResult(city: place.city, country: place.country))
-                }
-            }
-    
-            buildCityTypeB(titleComponents, subtitleComponents){place in
-                if place.city != "" && place.country != ""{
-                    searchResults.append(SearchResult(city: place.city, country: place.country))
-                }
-            }
-        }
-        return searchResults
-    }
-    
-    
-    func buildCityTypeA(_ title: [String],_ subtitle: [String], _ completion: @escaping ((city: String, country: String)) -> Void){
-        var city: String = ""
-        var country: String = ""
-        
-        if title.count > 1 && subtitle.count >= 1 {
-            city = title.first!
-            country = subtitle.count == 1 && subtitle[0] != "" ? subtitle.first! : title.last!
-        }
-        completion((city, country))
-    }
-
-    func buildCityTypeB(_ title: [String],_ subtitle: [String], _ completion: @escaping ((city: String, country: String)) -> Void){
-        var city: String = ""
-        var country: String = ""
-        
-        if title.count >= 1 && subtitle.count == 1 {
-            city = title.first!
-            country = subtitle.last!
-        }
-        completion((city, country))
     }
 }
 

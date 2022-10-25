@@ -39,8 +39,7 @@ struct CurrentWeatherAssets {
                         horizontalBgName = "clear-h"
                         sectionColor = UIColor(red: 58/255, green: 105/255, blue: 152/255, alpha: 0.8)
                     default:
-                        horizontalBgName = "clear-h"
-                        sectionColor = UIColor(red: 71/255, green: 139/255, blue: 174/255, alpha: 0.65)
+                        print()
                 }
                 
             case "cloud.sun":
@@ -61,9 +60,7 @@ struct CurrentWeatherAssets {
                         horizontalBgName = "clouds-h"
                         sectionColor = UIColor(red: 70/255, green: 110/255, blue: 141/255, alpha: 0.80)
                     default:
-                        horizontalBgName = "clear-h"
-                        sectionColor = .clear
-                        navigationBarsColor = .clear
+                        print()
                 }
                 
                 
@@ -91,6 +88,7 @@ struct CurrentWeatherAssets {
                 horizontalBgName = "moon-stars-h"
                 sectionColor = UIColor(red: 38/255, green: 138/255, blue: 188/255, alpha: 0.35)
                 config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.label, .systemYellow, .tertiaryLabel]))
+                // to do
                 
             case "moon.stars":
                 symbolName = "moon.stars.fill"
@@ -105,11 +103,31 @@ struct CurrentWeatherAssets {
                 horizontalBgName = "wind-h"
                 sectionColor = UIColor(red: 150/255, green: 154/255, blue: 140/255, alpha: 0.8)
                 
+            case "snow":
+                symbolName = "snow"
+                dynamicVerticalBgName = "wind-vd"
+                horizontalBgName = "wind-h"
+                sectionColor = UIColor(red: 150/255, green: 154/255, blue: 140/255, alpha: 0.8)
+                // to do
+                
+            case "moon.haze":
+                symbolName = "moon.haze.fill"
+                dynamicVerticalBgName = "moon-haze-vd"
+                horizontalBgName = "moon-haze-h"
+                sectionColor = UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 0.8)
+                config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.label, .systemYellow, .tertiaryLabel]))
+                // to do
+                
+            case "sun.haze":
+                symbolName = "sun.haze.fill"
+                dynamicVerticalBgName = "wind-vd"
+                horizontalBgName = "wind-h"
+                sectionColor = UIColor(red: 150/255, green: 154/255, blue: 140/255, alpha: 0.8)
+                config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.label, .systemYellow, .tertiaryLabel]))
+                // to do
+                
             default:
-                horizontalBgName = "moon-stars-h"
-                symbolName = "square.fill"
-                sectionColor = .clear
-                config = config.applying(UIImage.SymbolConfiguration(paletteColors: [.secondaryLabel]))
+                print()
         }
         weatherConditionSymbol = UIImage(systemName: symbolName, withConfiguration: config)!
         horizontalBgImage = UIImage(named: horizontalBgName)

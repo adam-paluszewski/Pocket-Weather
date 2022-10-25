@@ -26,7 +26,6 @@ class PWWeatherHeaderView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-
     }
     
     
@@ -43,7 +42,7 @@ class PWWeatherHeaderView: UIView {
         fetchingWeatherLabel.addShadow()
         conditionLabel.addShadow()
         
-        fetchingWeatherLabel.text = "Checking location..."
+        fetchingWeatherLabel.text = Localization.fetchingWeather
     
         addSubviews()
     }
@@ -67,15 +66,13 @@ class PWWeatherHeaderView: UIView {
             cityLabel.bottomAnchor.constraint(equalTo: temperatureLabel.topAnchor, constant: -10),
             cityLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
             cityLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
-            cityLabel.heightAnchor.constraint(equalToConstant: 30),
+            cityLabel.heightAnchor.constraint(equalToConstant: 32),
              
             conditionLabel.topAnchor.constraint(equalTo: temperatureLabel.bottomAnchor),
             conditionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
             conditionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
             conditionLabel.heightAnchor.constraint(equalToConstant: 20),
         ])
-        
-
     }
     
     
@@ -92,7 +89,6 @@ class PWWeatherHeaderView: UIView {
             let tempString = formatter.string(from: temperature)
             temperatureLabel.text = tempString
         }
-        
         conditionLabel.text = location.weather?.currentWeather.condition.description
     }
     
