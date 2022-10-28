@@ -41,7 +41,7 @@ class PWCityCell: UITableViewCell {
         backgroundColor = .clear
         
         blackFilterView.layer.cornerRadius = 16
-        blackFilterView.backgroundColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.25)
+        blackFilterView.backgroundColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.35)
         
         containerView.layer.cornerRadius = 16
         containerView.clipsToBounds = true
@@ -76,7 +76,7 @@ class PWCityCell: UITableViewCell {
         cityLabel.text = location.city
         guard let weather = location.weather else { return }
 
-        weatherAssets = CurrentWeatherAssets(weather: weather)
+        weatherAssets = CurrentWeatherAssets(weather: weather.currentWeather)
         
         
         let formatter = MeasurementFormatter()

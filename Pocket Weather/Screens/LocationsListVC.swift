@@ -143,16 +143,8 @@ class LocationsListVC: UIViewController {
     
     
     func layoutUI() {
-        UIHelper.createAxialGradient(in: view, startPoint: CGPoint(x: 0, y: 0), endPoint: CGPoint(x: 1, y: 1), colors: [UIColor(red: 29/255, green: 75/255, blue: 110/255, alpha: 1).cgColor, UIColor(red: 78/255, green: 85/255, blue: 91/255, alpha: 1).cgColor])
-        
         view.addSubview(tableView)
-        
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+        activateConstraints()
     }
 }
 

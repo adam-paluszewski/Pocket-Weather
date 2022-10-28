@@ -11,4 +11,6 @@ import UIKit
 struct Constants {
 
     static let animationDuration: Double = 1
+    
+    static let forecastHeaderViewHeight: CGFloat = 50
 }

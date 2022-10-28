@@ -73,7 +73,7 @@ class PWHourForecastCell: UITableViewCell {
     func set(weather: HourWeather) {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH"
-        formatter.timeZone = .autoupdatingCurrent
+        formatter.timeZone = .current
         hourLabel.text = formatter.string(from: weather.date)
         
         let precipitationChance = weather.precipitationChance * 100
@@ -91,7 +91,6 @@ class PWHourForecastCell: UITableViewCell {
         cloudsView.set(weather: weather)
         windView.set(weather: weather)
         conditionView.set(weather: weather)
-        
     }
     
 }

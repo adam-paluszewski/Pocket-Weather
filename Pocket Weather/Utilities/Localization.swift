@@ -12,6 +12,7 @@ struct Localization {
     static let mostlyClear = NSLocalizedString("Mostly Clear", comment: "")
     static let mostlyCloudy = NSLocalizedString("Mostly Cloudy", comment: "")
     static let cloudy = NSLocalizedString("Cloudy", comment: "")
+    static let partlyCloudy = NSLocalizedString("Partly Cloudy", comment: "")
     
     static let ok = NSLocalizedString("OK", comment: "")
     static let cancel = NSLocalizedString("Cancel", comment: "")

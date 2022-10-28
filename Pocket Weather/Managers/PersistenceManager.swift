@@ -7,9 +7,11 @@
 
 import Foundation
 
+
 enum PersistanceActionType {
     case add, addMyLocation, remove
 }
+
 
 struct PersistenceManager {
  
